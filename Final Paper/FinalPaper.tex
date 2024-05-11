@@ -73,7 +73,7 @@ This enables us to advance to the next phase, where comparisons can be made betw
 Schwa deletion in French is a phonological pattern that has been extensively researched in phonological literature. A specific instance of such deletion was presented by Dell (1973) in his famous book "Les règles et les sons" (The rules and sounds) under "Schwas en syllabes contiguës" (Schwas in contiguous syllables) among many other cases of schwa deletion. This specific phenomenon is known as Optional Schwa Deletion (henceforth OSD), and has been examined several times later on,  challenging various phonological theories. A question that arises is whether native speakers of French approve/disprove of the different options of deleting the schwa in some cases as Dell suggested.\\
 
 The goal of this paper is to try to answer this question by conducting an experiment, in order to determine whether Dell's findings are characteristic of  French speakers today. 
-In section 2, I introduce the theoretical background for my work (Head-Complement order and previous work),  then I present my approach for improving the learner and explain how I address it. 
+In section 2, I introduce the theoretical background for my work (Head-Complement order and previous work),  then I present my proposal for improving the learner and explain how I address it. 
 Then,  in section 3,  I present the implementation of the genetic algorithm. 
 Finally,  in section 4,  I summarize the conclusions that I draw from my work.
 
@@ -81,19 +81,31 @@ Finally,  in section 4,  I summarize the conclusions that I draw from my work.
 \section{Background} % 2 - Background
 In linguistics, the study of languages, phonology is the study of their pronunciation,  the sound system of a language and its properties.
 
-\subsection{Terminology and basic definitions} % Head-Complement order, Theoretical Models for Learning, UG
+\subsection{Terminology and basic definitions} % (Avraham 1 - Head-Complement order)
+First, the 
 \begin{enumerate}
-
+  \item \textbf{Head-Complement Order}: A  
   \item \textbf{Universal Grammar (UG)}: The premise of Generative Linguistics is the fact that native speakers have knowledge about
 their language that allows them to produce and comprehend words and sentences that they have never heard before. The description of that knowledge is called a Grammar, and it is what humans are assumed to acquire when acquiring language. This led to the thought that humans are born with some characterization of the set of grammars that they are able to acquire,  which Chomsky proposed to call UG.
-% is it necessary???
-  \item Other definitions: Dell uses the sign \# to mark the boundaries of a word, and * for incorrect derivations.
-
 \end{enumerate}
 
 
-% following subsections
-\subsection{Current implementation (SA)}
+\subsection{Theoretical Models for Learning} % (Avraham 2 - Theoretical Models for Learning)
+To approach this from a computational learning perspective, several theoretical models were used:
+\begin{enumerate}
+  \item \textbf{Learning algorithm}: A
+  \item \textbf{Formalism - MCS and MG}: A
+  \item \textbf{Parser - MG Bottom-Up}: A
+  \item \textbf{Metric - MDL}: A
+\end{enumerate}
+
+% Current implementation (Avraham 3 - Implementing Head-Direction Learners)
+These were all implemented by Avraham in the following manner
+Now we move on to focus on the learning component, more specifically the learning algorithm used.
+
+
+% following subsections (my proposal)
+\subsection{Simulated Annealing (SA)}
 \subsection{Genetic algorithms (GA)}
 % (i) Genetic algorithms (what is it? what is the general structure?)
 % (ii) Why choose GA/Use of evolutionary algrithms in statistical NLP bla bla (advantages, why did I choose to go in this direction? based on various articles I have read - צריך לעשות פה סקירות ספרות קטנה ולשכנע למה אני מנסה לממש כזה דבר))
@@ -133,7 +145,7 @@ As mentioned, OSD has several interesting attributes that gained attention in li
    \item[Iterativity] This example from French was used as an argument against a theory of Chomsky \& Halle (1968) which declared that rules operate non-iteratively: that is, if a specific rule has several environments in which it can apply, it would apply to all of them together - simultaneously.  The prediction of a non-iterative application is no self-feeding/self-bleeding interactions. The reason OSD is an evidence against their theory, is due to the fact that here there seems to be an interaction of \textit{self-bleeding}: if the rule applies in one position, it ruins its potential environment to apply in a second position. If the rule were to apply simultaneously on both environments in the input, it would apply twice - and that is not what actually happens (according to Dell). It appears to be that if there are several environments, the deletion must take place one after another, so that the rule can bleed itself and generate the correct output.
 \end{description}
 
-\subsection{Research Question}
+\subsection{Research Question} % my proposal and its motivation
 As previously stated, the data regarding OSD which was cited many times later, comes from Dell's work. As of now, we do not know exactly to what extent his generalisations are correct, and whether French speakers do prefer these patterns in different combinations of words.
 
 My main research question is whether speakers of French are willing to accept the patterns Dell suggested in his analysis of OSD back in 1973.  Do they prefer the opaque (caused by self-counterbleeding) or transparent (caused by self-bleeding) forms?
