@@ -17,7 +17,7 @@
 % more packages:
 \usepackage{multirow} 			% for tables
 \usepackage{enumitem} 			% for ordered list a-b-c 
-\usepackage{fancyhdr}
+\usepackage{fancyhdr}			% for header in each page
 \pagestyle{fancy}
 
 \begin{document}	
@@ -26,10 +26,9 @@
     \begin{center}
 	\vspace*{2cm}
         	\huge
-	%Using genetic algorithm for learning
 	% use the word "evolutionary"
 	% simulated annealing - "SA", genetic algorithm - "GA"
-        	\textbf{Learning Head-Complement Order with Minimalist Grammars \newline \\ Improving the learning process}
+        	\textbf{Learning Head-Complement Order with Minimalist Grammars \newline \\ Using a genetic algorithm}
 
 
             
@@ -73,13 +72,16 @@ This enables us to advance to the next phase, where comparisons can be made betw
 \section{Introduction} % 1 - Introduction
 Schwa deletion in French is a phonological pattern that has been extensively researched in phonological literature. A specific instance of such deletion was presented by Dell (1973) in his famous book "Les règles et les sons" (The rules and sounds) under "Schwas en syllabes contiguës" (Schwas in contiguous syllables) among many other cases of schwa deletion. This specific phenomenon is known as Optional Schwa Deletion (henceforth OSD), and has been examined several times later on,  challenging various phonological theories. A question that arises is whether native speakers of French approve/disprove of the different options of deleting the schwa in some cases as Dell suggested.\\
 
-The goal of this paper is to try to answer this question by conducting an experiment, in order to determine whether Dell's findings are characteristic of  French speakers today. In section 2, I introduce the theoretical background for my research (Phonology and OSD in particular),  then I present my question and explain how the paper will try to address it. Then,  in section 3,  I present the experiment designed and run to test this question. Finally,  in section 4,  I summarize the conclusions that I draw from my research.
+The goal of this paper is to try to answer this question by conducting an experiment, in order to determine whether Dell's findings are characteristic of  French speakers today. 
+In section 2, I introduce the theoretical background for my work (Head-Complement order and previous work),  then I present my approach for improving the learner and explain how I address it. 
+Then,  in section 3,  I present the implementation of the genetic algorithm. 
+Finally,  in section 4,  I summarize the conclusions that I draw from my work.
 
 \clearpage
 \section{Background} % 2 - Background
 In linguistics, the study of languages, phonology is the study of their pronunciation,  the sound system of a language and its properties.
 
-\subsection{Terminology and basic definitions} % UG, learning algorithms
+\subsection{Terminology and basic definitions} % Head-Complement order, Theoretical Models for Learning, UG
 \begin{enumerate}
 
   \item \textbf{Universal Grammar (UG)}: The premise of Generative Linguistics is the fact that native speakers have knowledge about
@@ -91,6 +93,8 @@ their language that allows them to produce and comprehend words and sentences th
 
 
 % following subsections
+\subsection{Current implementation (SA)}
+\subsection{Genetic algorithms (GA)}
 % (i) Genetic algorithms (what is it? what is the general structure?)
 % (ii) Why choose GA/Use of evolutionary algrithms in statistical NLP bla bla (advantages, why did I choose to go in this direction? based on various articles I have read - צריך לעשות פה סקירות ספרות קטנה ולשכנע למה אני מנסה לממש כזה דבר))
 
@@ -140,7 +144,7 @@ The importance of knowing whether Dell's suggestions are characteristic of speak
 
 
 \clearpage
-\section{Method} % 3 - Main
+\section{Implementation} % 3 - Main: implementing GA
 In order to test native French speakers' knowledge of their language to verify Dell's analysis, they were exposed to recordings of different pronunciation options and asked to rate them.  For online data collection,  the software PsyToolkit was used (Stoet, 2010, 2017). After constructing the basic phrases myself, I consulted a French speaker who also recorded in her voice all the different versions as described below. 
 
 
@@ -207,25 +211,21 @@ My conclusions are certainly tentative because of the previously mentioned confo
 \fancyhead[RO]{\textit{REFERENCES}}
 
 \begin{thebibliography}{} % - References
+
+% section 1
+\bibitem{texbook} 
+Avraham, T. (2017). 
+Learning Head-Complement Order with Minimalist Grammars.
+MA thesis, Tel Aviv University.
+
+
+% section 2
 \bibitem{texbook}
-Dell, François. (1973). Les règles et les sons: introduction à la phonologie générative. Paris: Hermann. Translated 1980 by Catherine Cullen as Generative phonology and French phonology. Cambridge: Cambridge University Press.
-\bibitem{texbook}
-Chomsky, Noam, and Morris Halle. (1968). The sound pattern of English. New York: Harper and Row.
-\bibitem{texbook}
-Prince, Alan, and Paul Smolensky.  (1993). Optimality Theory: Constraint interaction in generative grammar. Wiley-Blackwell: Oxford.
-\bibitem{texbook}
-McCarthy, John. (2007). Hidden generalizations: Phonological opacity in Optimality Theory. London: Equinox.
-\bibitem{texbook}
-Kiparsky, Paul. (1971). Historical linguistics. In A survey of linguistic science, ed. W. O. Dingwall, 576–642. University of Maryland Linguistics Program, College Park.
-\bibitem{texbook}
-Stoet, G. (2010). PsyToolkit - A software package for programming psychological experiments using Linux. 	Behavior Research Methods, 42(4), 1096-1104.  
-\bibitem{texbook}
-Stoet, G. (2017). PsyToolkit: A novel web-based method for running online questionnaires and reaction-time experiments. Teaching of Psychology, 44(1), 24-31.
-\bibitem{corpus}
-D. Goldhahn, T. Eckart \& U. Quasthoff: Building Large Monolingual Dictionaries at the Leipzig Corpora Collection: From 100 to 200 Languages.
-In: Proceedings of the 8th International Language Resources and Evaluation (LREC'12), 2012
-\bibitem{t}
-Bayles, Andrew, Aaron Kaplan and Abby Kaplan.(2016). Inter- and intra-speaker variation in French schwa. Glossa: a journal of general linguistics 1(1): 19. 1–30, DOI: http://dx.doi.org/10.5334/gjgl.54
+Stabler, E. (1996). 
+Derivational minimalism. In International conference on logical aspects of computational linguistics (pp. 68-95). 
+Berlin, Heidelberg: Springer Berlin Heidelberg.
+
+
 \end{thebibliography}
 
 \end{document}
