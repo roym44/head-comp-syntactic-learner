@@ -287,5 +287,11 @@ def write_text_to_const(name, text):
 
 
 if __name__ == '__main__':
+    """
+    TODO: first impressions:
+    - all the consts at the top of the file are not used in the code, maybe we can remove them
+    - only one function here is used outside - get_custom_text, maybe we can remove the rest
+    - nouns in the code actually refer to proper_nouns list
+    """
     text = get_english_like_text(50)
     write_text_to_const("ENGLISH_LIKE", text)
