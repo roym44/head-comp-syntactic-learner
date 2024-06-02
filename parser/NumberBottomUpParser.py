@@ -1,6 +1,4 @@
-
 import time
-import pprint
 import MinimalistGrammarTree
 import NumberMinimalistGrammarTree
 
@@ -32,13 +30,13 @@ class NumberBottomUpParser(object):
                     best_result = result
         else:
             self.agenda_permutations = self.get_agenda_permutations()
-            print "Number of permutations:", len(self.agenda_permutations)
+            print("Number of permutations:", len(self.agenda_permutations))
             results = []
             
             for i, agenda in enumerate(self.agenda_permutations):
                 self.init_chart()
                 if i % 10 == 0:
-                    print "permutation ", i
+                    print("permutation ", i)
                 perm_results = self.parse_permutation(agenda, None)
                 for result in perm_results:
                     if best_result is None or \
@@ -165,9 +163,9 @@ class NumberBottomUpParser(object):
             else:
                 item_words = self.split_substring(item.head.substring)
                 # We want to find all occurrences of the substring in the input and add an item for each.
-                for i in xrange(self.input_length - len(item_words) + 1):
+                for i in range(self.input_length - len(item_words) + 1):
                     found = True
-                    for j in xrange(len(item_words)):
+                    for j in range(len(item_words)):
                         if self.input_substrings[i + j] != item_words[j]:
                             found = False
                     if found:
@@ -184,7 +182,7 @@ class NumberBottomUpParser(object):
         
         for i, substring in enumerate(self.input_substrings):
             # The same word can appear several times in the same sentence.
-            if self.substrings.has_key(substring):
+            if substring in self.substrings:
                 self.substrings[substring].append((i, i + 1))
             else:
                 self.substrings[substring] = [(i, i + 1)]
@@ -230,9 +228,9 @@ class NumberBottomUpParser(object):
         return new_tree
         
     def invert_translation_dicts(self):
-        self.inverted_types = {v : k for k, v in self.types.iteritems()}
-        self.inverted_categories = {v : k for k, v in self.categories.iteritems()}
-        self.inverted_licenses = {v : k for k, v in self.licenses.iteritems()}
+        self.inverted_types = {v : k for k, v in self.types.items()}
+        self.inverted_categories = {v : k for k, v in self.categories.items()}
+        self.inverted_licenses = {v : k for k, v in self.licenses.items()}
         
     def translate_to_strings(self, number_tree):
         type = self.inverted_types[number_tree.type]
@@ -296,8 +294,8 @@ class NumberBottomUpParser(object):
 def parse_sentence(grammar, sentence, draw_tree = False):
     parser = NumberBottomUpParser(grammar)
     
-    print "Parsing the sentence:", sentence
-    print "..."
+    print("Parsing the sentence:", sentence)
+    print("...")
     start = time.time()
     # try:
     if True:
@@ -307,41 +305,41 @@ def parse_sentence(grammar, sentence, draw_tree = False):
         import pdb; pdb.set_trace()
 
     if result:
-        print "The sentence is in my language."
+        print("The sentence is in my language.")
     else:
-        print "The sentence is ungrammatical in my language!"
+        print("The sentence is ungrammatical in my language!")
     end = time.time()
     
     for item in parser.results:
-        print "Item:", item
+        print("Item:", item)
         # print "Derivation length:", item.derivation_length
         # print "Derivation size:", item.derivation_size
         if draw_tree:
             from ParseTreePrinter import print_parse_tree
             print_parse_tree(sentence, item.nested_derivation, translation_func = parser.translate_to_strings)
         
-    print "\nElapsed time:", end - start
+    print("\nElapsed time:", end - start)
     
 def parse_input(grammar, input):
     parser = NumberBottomUpParser(grammar)
-    print "Parsing %d sentences" % (len(input), )
+    print("Parsing %d sentences" % (len(input), ))
     start = time.time()
     for i, sentence in enumerate(input):
-        print i, sentence, "-",
+        print(i, sentence, "-", end=' ')
         result = parser.parse(sentence)
-        print result
+        print(result)
         if not result:
-            print "Failed"
+            print("Failed")
             break
     else:
-        print "All sentences are parsed."
+        print("All sentences are parsed.")
     end = time.time()
-    print "\nElapsed time:", end - start
+    print("\nElapsed time:", end - start)
     
 def compare_hypotheses(input, grammar_1, grammar_2):
     parser_1 = NumberBottomUpParser(grammar_1)
     parser_2 = NumberBottomUpParser(grammar_2)
-    print "Parsing %d sentences" % (len(input), )
+    print("Parsing %d sentences" % (len(input), ))
     start = time.time()
     total_length_1 = 0
     total_length_2 = 0
@@ -353,28 +351,28 @@ def compare_hypotheses(input, grammar_1, grammar_2):
         result_2 = parser_2.parse(sentence)
         if not result_1 or not result_2:
             if not result_1:
-                print i, sentence, "-", "Failed to parse by grammar 1"
+                print(i, sentence, "-", "Failed to parse by grammar 1")
             if not result_2:
-                print i, sentence, "-", "Failed to parse by grammar 2"
+                print(i, sentence, "-", "Failed to parse by grammar 2")
             continue
         length_1 = parser_1.results[0].derivation_length
         length_2 = parser_2.results[0].derivation_length
         size_1 = parser_1.results[0].derivation_size
         size_2 = parser_2.results[0].derivation_size
         if length_1 != length_2 or size_1 != size_2:
-            print i, sentence, "-", "Different:"
-            print "Length 1 -", length_1, "Size 1:", size_1
-            print "Length 2 -", length_2, "Size 2:", size_2
+            print(i, sentence, "-", "Different:")
+            print("Length 1 -", length_1, "Size 1:", size_1)
+            print("Length 2 -", length_2, "Size 2:", size_2)
         else:
-            print i, sentence, "-", "Same"
+            print(i, sentence, "-", "Same")
         total_length_1 += length_1
         total_length_2 += length_2
         total_size_1 += size_1
         total_size_2 += size_2
     end = time.time()
-    print "\nElapsed time:", end - start
-    print "Grammar 1: length -", len(grammar_1.lexicon), "total input length -", total_length_1, "total input size -", total_size_1
-    print "Grammar 2: length -", len(grammar_2.lexicon), "total input length -", total_length_2, "total input size -", total_size_2
+    print("\nElapsed time:", end - start)
+    print("Grammar 1: length -", len(grammar_1.lexicon), "total input length -", total_length_1, "total input size -", total_size_1)
+    print("Grammar 2: length -", len(grammar_2.lexicon), "total input length -", total_length_2, "total input size -", total_size_2)
         
 if __name__ == '__main__':
     NumberMinimalistGrammarTree.WITH_NESTED_DERIVATION = True
