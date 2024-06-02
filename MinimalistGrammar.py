@@ -63,7 +63,7 @@ def compare_for_susbtrings(one, two):
     
 def sort_grammar_string(grammar_string):
     lexicon = get_grammar_from_string(grammar_string).lexicon
-    return sorted(lexicon, cmp = compare_for_susbtrings)
+    return sorted(lexicon, key=lambda x: compare_for_susbtrings(x))
 
 if __name__ == '__main__':    
     grammar_string = '''
