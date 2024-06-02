@@ -1,5 +1,4 @@
 import re
-import copy
 
 NODE_RE_PATTERN = r"""
     (?P<substring>.+)    # The substring of the input this node represents.
@@ -7,7 +6,6 @@ NODE_RE_PATTERN = r"""
     (?P<features>.+)     # The features this node has.
 """
 NODE_RE = re.compile(NODE_RE_PATTERN, re.VERBOSE)
-
 FEATURES_DELIMITER = ' '
 SELECT_PREFIX = '='
 LICENSOR_PREFIX = '+'
