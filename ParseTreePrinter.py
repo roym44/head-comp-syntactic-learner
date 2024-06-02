@@ -4,7 +4,7 @@ import time
 
 from igraph import Graph, plot
 
-PICS_FOLDER = "Derivation Trees"
+PICS_FOLDER = "resources"
 
 # This function expects the following structure:
 # step is a tuple with at least two fields.
