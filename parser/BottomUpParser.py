@@ -2,8 +2,8 @@ import time
 import pprint
 
 from Grammars import *
-from MinimalistGrammarTree import *
-from MinimalistGrammar import get_grammar_from_string
+from minimalist_grammar.MinimalistGrammarTree import *
+from minimalist_grammar.MinimalistGrammar import get_grammar_from_string
 
 
 class BottomUpParser(object):

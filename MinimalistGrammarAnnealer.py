@@ -4,10 +4,9 @@ import math
 import random
 
 import BlankGrammars
-from NumberBottomUpParser import NumberBottomUpParser
-from MinimalistGrammar import MinimalistGrammar
-from MinimalistGrammarTree import *
-from MinimalistGrammarNode import MinimalistGrammarNode
+from parser.NumberBottomUpParser import NumberBottomUpParser
+from minimalist_grammar.MinimalistGrammarTree import *
+from minimalist_grammar.MinimalistGrammarNode import MinimalistGrammarNode
 
 MAX_GRAMMAR_LENGTH = 1200
 
@@ -594,8 +593,7 @@ class MinimalistGrammarAnnealer(object):
         return total_length
 
 if __name__ == '__main__':
-    import Grammars
-    from MinimalistGrammar import get_grammar_from_string
+    from minimalist_grammar.MinimalistGrammar import get_grammar_from_string
     
     input = ["John fell", "Paul fell", "George fell", "Ringo fell"]
     print input

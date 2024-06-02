@@ -1,7 +1,7 @@
 import re
 import copy
 
-from MinimalistGrammarNode import MinimalistGrammarNode
+from minimalist_grammar.MinimalistGrammarNode import MinimalistGrammarNode
 
 SUBSTRING_DELIMITER = ' '
 

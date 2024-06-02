@@ -1,6 +1,6 @@
 
-from MinimalistGrammar import MinimalistGrammar
-from MinimalistGrammarTree import MinimalistGrammarTree
+from minimalist_grammar.MinimalistGrammar import MinimalistGrammar
+from minimalist_grammar.MinimalistGrammarTree import MinimalistGrammarTree
 
 LINGUISTIC_LEXICON = [
     MinimalistGrammarTree("[>Lavinia:d -k]s"),
