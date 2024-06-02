@@ -9,7 +9,7 @@ from MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
 from InputGenerator import *
 from BlankGrammars import *
 
-LOGS_FOLDER = "Learner Logs"
+LOGS_FOLDER = "logs"
 
 log_file = None
 
