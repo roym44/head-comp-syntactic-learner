@@ -1,4 +1,5 @@
-import MinimalistGrammarTree
+from functools import cmp_to_key
+from minimalist_grammar import MinimalistGrammarTree
 
 
 class MinimalistGrammar(object):
@@ -66,7 +67,7 @@ def compare_for_susbtrings(one, two):
 
 def sort_grammar_string(grammar_string):
     lexicon = get_grammar_from_string(grammar_string).lexicon
-    return sorted(lexicon, key=lambda x: compare_for_susbtrings(x))
+    return sorted(lexicon, key=cmp_to_key(compare_for_susbtrings))
 
 
 if __name__ == '__main__':

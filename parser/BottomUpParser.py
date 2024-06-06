@@ -74,14 +74,8 @@ def parse_sentence(grammar, sentence, draw_tree=False):
     print("Parsing the sentence:", sentence)
     print("...")
     start = time.time()
-    # try:
-    if True:
-        result = parser.parse(sentence)
-    else:
-        # except:
-        import pdb;
-        pdb.set_trace()
 
+    result = parser.parse(sentence)
     if result:
         print("The sentence is in my language.")
     else:
