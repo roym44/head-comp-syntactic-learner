@@ -69,5 +69,5 @@ def print_parse_tree(sentence, derivation, save_to_file = True, translation_func
         
 if __name__ == '__main__':
     sample_derivation = ("who John saw", "Move", ("John saw who", "Merge", ("John", "Lexicon"), ("saw who", "Merge", ("saw", "Lexicon"), ("who", "Lexicon"))))
-    print_parse_tree("who John saw", sample_derivation, save_to_file = False)
+    print_parse_tree("who John saw", sample_derivation, save_to_file=False)
     
