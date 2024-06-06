@@ -1,9 +1,8 @@
-
 import time
 import math
 import random
 
-import BlankGrammars
+from input import BlankGrammars
 from parser.NumberBottomUpParser import NumberBottomUpParser
 from minimalist_grammar.MinimalistGrammarTree import *
 from minimalist_grammar.MinimalistGrammarNode import MinimalistGrammarNode
@@ -609,7 +608,7 @@ if __name__ == '__main__':
     grammar_2 = get_grammar_from_string(grammar_string_2)
     grammar_3 = get_grammar_from_string(grammar_string_3)
     
-    from BlankGrammars import *
+    from input.BlankGrammars import *
     def log(x):
         print(x)
     annealer = MinimalistGrammarAnnealer(input, KAYNE_GRAMMAR_WITH_HACK, "Kayne", log)

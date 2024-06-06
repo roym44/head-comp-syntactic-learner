@@ -1,13 +1,10 @@
-
 import os
-import sys
 import math
 import time
-import random
 
 from MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
-from InputGenerator import *
-from BlankGrammars import *
+from input.InputGenerator import *
+from input.BlankGrammars import *
 
 LOGS_FOLDER = "logs"
 

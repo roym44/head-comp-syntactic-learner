@@ -1,7 +1,5 @@
-
 import os
 import time
-
 from igraph import Graph, plot
 
 PICS_FOLDER = "resources"
