@@ -43,6 +43,7 @@ class NumberMinimalistGrammarTree(object):
         
         if WITH_NESTED_DERIVATION:
             self.nested_derivation = (self, "Lexicon")
+        # TODO: current implementation requires a hash function (to create the set)
         self.composing_items = {self}
             
         self.hash = hash(self)
@@ -289,7 +290,11 @@ class NumberMinimalistGrammarTree(object):
         
     def __repr__(self):
         return '[%s]%s' % (NODES_DELIMITER.join([str(node) for node in self.nodes]), self.type)
-        
+
+    # TODO: is this good enough? I had to implement it because in python3.11 there's no default hash
+    def __hash__(self):
+        return hash(str(self))
+
 def test_actions():
     print("\nMerge-1")
     tree1 = MinimalistGrammarTree("[every:=n d -case]s")

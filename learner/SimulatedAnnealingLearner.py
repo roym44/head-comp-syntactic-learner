@@ -2,13 +2,13 @@ import os
 import math
 import time
 
-from MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
+from learner.MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
 from input.InputGenerator import *
 from input.BlankGrammars import *
 
 LOGS_FOLDER = "logs"
-
 log_file = None
+blank_grammar = KAYNE_GRAMMAR_WITH_EMPTY_DP
 
 def log(line):
     time_str = time.strftime("%Y_%m_%d__%H_%M_%S: ")
@@ -373,13 +373,3 @@ def run_learner():
             import pdb; pdb.set_trace()
         steps = int(input)
         learner.anneal(steps)
-
-if __name__ == '__main__':
-    blank_grammar = KAYNE_GRAMMAR_WITH_EMPTY_DP # Works with impossible category, not always for naive deletion. Works slow.
-    
-    # run_learner()
-    sanity_test(pp = True, cp = True, coordination = True)
-    # test_learner("Kayne", "Head-final", pp = True, cp = True, coordination = True, user_input = False, input_size = 100)
-    
-    
-    

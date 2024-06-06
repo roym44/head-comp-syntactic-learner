@@ -4,6 +4,7 @@ import random
 
 from input import BlankGrammars
 from parser.NumberBottomUpParser import NumberBottomUpParser
+from minimalist_grammar.MinimalistGrammar import *
 from minimalist_grammar.MinimalistGrammarTree import *
 from minimalist_grammar.MinimalistGrammarNode import MinimalistGrammarNode
 
@@ -75,7 +76,12 @@ class MinimalistGrammarAnnealer(object):
             else:
                 lexicon.append(tree)
         
-        return MinimalistGrammar(sorted(lexicon))
+        """
+        originally: sorted(lexicon), with no implementation of __lt__ in MinimalistGrammarTree.
+                    In python2.7 it simply compares the memory addresses of the objects (id).
+        Here I decided to arbitrarily to use 
+        """
+        return MinimalistGrammar(sorted(lexicon, key = lambda x: x.size()))
         
     def random_neighbour(self, hypothesis):
         neighbour = None
