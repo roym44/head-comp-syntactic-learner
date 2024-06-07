@@ -1,20 +1,19 @@
-
 import time
 import math
 import random
 
-import BlankGrammars
-from NumberBottomUpParser import NumberBottomUpParser
-from MinimalistGrammar import MinimalistGrammar
-from MinimalistGrammarTree import *
-from MinimalistGrammarNode import MinimalistGrammarNode
+from input import BlankGrammars
+from parser.NumberBottomUpParser import NumberBottomUpParser
+from minimalist_grammar.MinimalistGrammar import *
+from minimalist_grammar.MinimalistGrammarTree import *
+from minimalist_grammar.MinimalistGrammarNode import MinimalistGrammarNode
 
 MAX_GRAMMAR_LENGTH = 1200
 
 class AnnealerException(Exception): pass
 
 def default_log(line):
-    print line
+    print(line)
 
 class MinimalistGrammarAnnealer(object):
     
@@ -77,7 +76,12 @@ class MinimalistGrammarAnnealer(object):
             else:
                 lexicon.append(tree)
         
-        return MinimalistGrammar(sorted(lexicon))
+        """
+        originally: sorted(lexicon), with no implementation of __lt__ in MinimalistGrammarTree.
+                    In python2.7 it simply compares the memory addresses of the objects (id).
+        Here I decided to arbitrarily to use 
+        """
+        return MinimalistGrammar(sorted(lexicon, key = lambda x: x.size()))
         
     def random_neighbour(self, hypothesis):
         neighbour = None
@@ -108,7 +112,7 @@ class MinimalistGrammarAnnealer(object):
         return neighbour, energy
     
     def add_and_delete(self, hypothesis):
-        for i in xrange(10):
+        for i in range(10):
             self.log("Trying to add and delete")
             grammar, energy = self.add_any_lexical_item(hypothesis)
             if grammar:
@@ -120,7 +124,7 @@ class MinimalistGrammarAnnealer(object):
         return None, None
         
     def add_probable_and_delete(self, hypothesis):
-        for i in xrange(10):
+        for i in range(10):
             self.log("Trying to add probable and delete")
             grammar, energy = self.add_probable_lexical_item(hypothesis)
             if grammar:
@@ -132,7 +136,7 @@ class MinimalistGrammarAnnealer(object):
         return None, None
         
     def delete(self, hypothesis):
-        for i in xrange(10):
+        for i in range(10):
             grammar, energy = self.delete_once(hypothesis)
             if grammar:
                 return grammar, energy
@@ -150,7 +154,7 @@ class MinimalistGrammarAnnealer(object):
         new_grammar = MinimalistGrammar(new_lexicon)
         try:
             energy = self.energy(new_grammar, deleted = removed)
-        except KeyboardInterrupt, e:
+        except KeyboardInterrupt as e:
             raise e
         except:
             return None, None
@@ -160,7 +164,7 @@ class MinimalistGrammarAnnealer(object):
     def add_any_lexical_item(self, hypothesis):
         self.log("Add lexical item:")
         blank_lexicon_without_empty_string = [category for category in self.blank_grammar.lexicon if EMPTY_STRING not in str(category)]
-        for i in xrange(10):
+        for i in range(10):
             grammar, energy = self.add_lexical_item_once(hypothesis, blank_lexicon_without_empty_string)
             if grammar:
                 return grammar, energy
@@ -171,7 +175,7 @@ class MinimalistGrammarAnnealer(object):
         blank_lexicon_without_empty_string = [category for category in self.blank_grammar.lexicon if EMPTY_STRING not in str(category)]
         hypothesis_without_substrings = [str(category).split(":")[1] for category in hypothesis.lexicon]
         probable_categories = [category for category in blank_lexicon_without_empty_string if str(category).split(":")[1] in hypothesis_without_substrings]
-        for i in xrange(10):
+        for i in range(10):
             grammar, energy = self.add_lexical_item_once(hypothesis, probable_categories)
             if grammar:
                 return grammar, energy
@@ -476,7 +480,7 @@ class MinimalistGrammarAnnealer(object):
             self.new_parsing_dict[sentence] = results
             
             if time.time() - self.last_print_time > 10:
-                print "Parsed %d sentences - (%s seconds since last update)" % (i + 1, time.time() - self.last_print_time)
+                print("Parsed %d sentences - (%s seconds since last update)" % (i + 1, time.time() - self.last_print_time))
                 self.last_print_time = time.time()
         
         return parsing_results
@@ -594,31 +598,30 @@ class MinimalistGrammarAnnealer(object):
         return total_length
 
 if __name__ == '__main__':
-    import Grammars
-    from MinimalistGrammar import get_grammar_from_string
+    from minimalist_grammar.MinimalistGrammar import get_grammar_from_string
     
     input = ["John fell", "Paul fell", "George fell", "Ringo fell"]
-    print input
+    print(input)
     
     grammar_string_1 = "[[>@: IP]s, [>John: IP =IP]s, [>Paul: IP =IP]s, [>George: IP =IP]s, [>Ringo: IP =IP]s, [>fell: IP =IP]s]"#, [>in: IP =IP]s, [>love: IP =IP]s]"
-    print grammar_string_1
+    print(grammar_string_1)
     grammar_string_2 = "[%s]" % (", ".join(["[>%s: IP]s" % (blb, ) for blb in input]), )
-    print grammar_string_2
+    print(grammar_string_2)
     grammar_string_3 = "[[>@: IP =VP =DP]s, [>John: DP]s, [>Paul: DP]s, [>George: DP]s, [>Ringo: DP]s, [>fell: VP]s]"
-    print grammar_string_3
+    print(grammar_string_3)
 
     grammar_1 = get_grammar_from_string(grammar_string_1)
     grammar_2 = get_grammar_from_string(grammar_string_2)
     grammar_3 = get_grammar_from_string(grammar_string_3)
     
-    from BlankGrammars import *
+    from input.BlankGrammars import *
     def log(x):
-        print x
+        print(x)
     annealer = MinimalistGrammarAnnealer(input, KAYNE_GRAMMAR_WITH_HACK, "Kayne", log)
     
     energy = annealer.energy(grammar_1)
-    print "Energy 1:", energy
+    print("Energy 1:", energy)
     energy = annealer.energy(grammar_2)
-    print "Energy 2:", energy
+    print("Energy 2:", energy)
     energy = annealer.energy(grammar_3)
-    print "Energy 3:", energy
+    print("Energy 3:", energy)

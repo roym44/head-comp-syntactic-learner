@@ -1,22 +1,19 @@
-
 import os
-import sys
 import math
 import time
-import random
 
-from MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
-from InputGenerator import *
-from BlankGrammars import *
+from learner.MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
+from input.InputGenerator import *
+from input.BlankGrammars import *
 
-LOGS_FOLDER = "Learner Logs"
-
+LOGS_FOLDER = "logs"
 log_file = None
+blank_grammar = KAYNE_GRAMMAR_WITH_EMPTY_DP
 
 def log(line):
     time_str = time.strftime("%Y_%m_%d__%H_%M_%S: ")
     log_file.write(time_str + line + "\n")
-    print line
+    print(line)
     log_file.flush()
 
 class SimulatedAnnealingLearner(object):
@@ -38,9 +35,9 @@ class SimulatedAnnealingLearner(object):
         total_steps = self.iteration + steps
         self.current_energy = self.annealer.energy(self.hypothesis)
         self.annealer.input_parsing_dict = self.annealer.new_parsing_dict
-        for i in xrange(steps):
+        for i in range(steps):
             log("\nIteration: %d" % (self.iteration, ))
-            print "Time: %s" % (time.strftime("%Y_%m_%d__%H_%M_%S: "), )
+            print("Time: %s" % (time.strftime("%Y_%m_%d__%H_%M_%S: "), ))
             log("Hypothesis: %s" % (self.hypothesis, ))
             log("Energy: %d" % (self.current_energy, ))
             log("Temperature: %f" % (self.temperature, ))
@@ -87,11 +84,11 @@ def test_annealing(input):
     initial_energy = annealer.energy(hyp)
     log("Initial Energy: %d" % (initial_energy, ))
     
-    temperature = int(raw_input("Temperature: "))
+    temperature = int(input("Temperature: "))
     
     learner = SimulatedAnnealingLearner(annealer, input, temperature)
     while True:
-        steps = int(raw_input("Steps: "))
+        steps = int(input("Steps: "))
         learner.anneal(steps)
         
 def init_log_file(learner, input, pp, cp):
@@ -168,7 +165,7 @@ def generate_input(input_type, pp, cp, coordination, size = 50):
 
 def test_learner(learner_type, input_type, pp = True, cp = False, coordination = False, input_size = 50, user_input = False, temperature = 100):
     log_file = init_log_file(learner_type, input_type, pp, cp)
-    print "Time: %s" % (time.strftime("%Y_%m_%d__%H_%M_%S: "), )
+    print("Time: %s" % (time.strftime("%Y_%m_%d__%H_%M_%S: "), ))
     
     input = generate_input(input_type, pp, cp, coordination, input_size)
     log("Input is: %s" % (input, ))
@@ -183,7 +180,7 @@ def test_learner(learner_type, input_type, pp = True, cp = False, coordination =
     
     if user_input:
         while True:
-            input = raw_input("Steps: ")
+            input = input("Steps: ")
             if input == 'd':
                 import pdb; pdb.set_trace()
             steps = int(input)
@@ -205,7 +202,7 @@ def sanity_test(pp = True, cp = True, coordination = False, input_size = 50, tem
     kayne_results = []
     
     if items_to_run is None:
-        items_to_run = range(1, 17)
+        items_to_run = list(range(1, 17))
     
     if 1 in items_to_run:
         start_time = time.time()
@@ -316,36 +313,36 @@ def sanity_test(pp = True, cp = True, coordination = False, input_size = 50, tem
         word_times.append(time.time() - start_time)
     
     # Print results:
-    print "Kayne learner:"
-    if 1 in items_to_run: print "Head-initial: %ss - %s" % (kayne_times[0], kayne_results[0])
-    if 2 in items_to_run: print "Head-final: %ss - %s" % (kayne_times[1], kayne_results[1])
-    if 3 in items_to_run: print "Mixed-category: %ss - %s" % (kayne_times[2], kayne_results[2])
-    if 4 in items_to_run: print "Mixed-word: %ss - %s" % (kayne_times[3], kayne_results[3])
+    print("Kayne learner:")
+    if 1 in items_to_run: print("Head-initial: %ss - %s" % (kayne_times[0], kayne_results[0]))
+    if 2 in items_to_run: print("Head-final: %ss - %s" % (kayne_times[1], kayne_results[1]))
+    if 3 in items_to_run: print("Mixed-category: %ss - %s" % (kayne_times[2], kayne_results[2]))
+    if 4 in items_to_run: print("Mixed-word: %ss - %s" % (kayne_times[3], kayne_results[3]))
     
-    print "Language learner:"
-    if 5 in items_to_run: print "Head-initial: %ss - %s" % (language_times[0], language_results[0])
-    if 6 in items_to_run: print "Head-final: %ss - %s" % (language_times[1], language_results[1])
-    if 7 in items_to_run: print "Mixed-category: %ss - %s" % (language_times[2], language_results[2])
-    if 8 in items_to_run: print "Mixed-word: %ss - %s" % (language_times[3], language_results[3])
+    print("Language learner:")
+    if 5 in items_to_run: print("Head-initial: %ss - %s" % (language_times[0], language_results[0]))
+    if 6 in items_to_run: print("Head-final: %ss - %s" % (language_times[1], language_results[1]))
+    if 7 in items_to_run: print("Mixed-category: %ss - %s" % (language_times[2], language_results[2]))
+    if 8 in items_to_run: print("Mixed-word: %ss - %s" % (language_times[3], language_results[3]))
     
-    print "Category learner:"
-    if 9 in items_to_run: print "Head-initial: %ss - %s" % (category_times[0], category_results[0])
-    if 10 in items_to_run: print "Head-final: %ss - %s" % (category_times[1], category_results[1])
-    if 11 in items_to_run: print "Mixed-category: %ss - %s" % (category_times[2], category_results[2])
-    if 12 in items_to_run: print "Mixed-word: %ss - %s" % (category_times[3], category_results[3])
+    print("Category learner:")
+    if 9 in items_to_run: print("Head-initial: %ss - %s" % (category_times[0], category_results[0]))
+    if 10 in items_to_run: print("Head-final: %ss - %s" % (category_times[1], category_results[1]))
+    if 11 in items_to_run: print("Mixed-category: %ss - %s" % (category_times[2], category_results[2]))
+    if 12 in items_to_run: print("Mixed-word: %ss - %s" % (category_times[3], category_results[3]))
     
-    print "Word learner:"
-    if 13 in items_to_run: print "Head-initial: %ss - %s" % (word_times[0], word_results[0])
-    if 14 in items_to_run: print "Head-final: %ss - %s" % (word_times[1], word_results[1])
-    if 15 in items_to_run: print "Mixed-category: %ss - %s" % (word_times[2], word_results[2])
-    if 16 in items_to_run: print "Mixed-word: %ss - %s" % (word_times[3], word_results[3])
+    print("Word learner:")
+    if 13 in items_to_run: print("Head-initial: %ss - %s" % (word_times[0], word_results[0]))
+    if 14 in items_to_run: print("Head-final: %ss - %s" % (word_times[1], word_results[1]))
+    if 15 in items_to_run: print("Mixed-category: %ss - %s" % (word_times[2], word_results[2]))
+    if 16 in items_to_run: print("Mixed-word: %ss - %s" % (word_times[3], word_results[3]))
     
 def run_learner():
     log_file_name = time.strftime("log_%Y_%m_%d__%H_%M_%S.txt")
     log_path = os.path.join(LOGS_FOLDER, log_file_name)
     global log_file
     log_file = open(log_path, 'w')
-    print "Time: %s" % (time.strftime("%Y_%m_%d__%H_%M_%S: "), )
+    print("Time: %s" % (time.strftime("%Y_%m_%d__%H_%M_%S: "), ))
     
     # Head initial:
     input = get_custom_text(size = 50, with_transitive = "initial", with_dp = None, with_prepositions = "initial", with_cp = None, recursion_depth = 1)
@@ -371,18 +368,8 @@ def run_learner():
     
     learner = SimulatedAnnealingLearner(annealer, input, temperature)
     while True:
-        input = raw_input("Steps: ")
+        input = input("Steps: ")
         if input == 'd':
             import pdb; pdb.set_trace()
         steps = int(input)
         learner.anneal(steps)
-
-if __name__ == '__main__':
-    blank_grammar = KAYNE_GRAMMAR_WITH_EMPTY_DP # Works with impossible category, not always for naive deletion. Works slow.
-    
-    # run_learner()
-    sanity_test(pp = True, cp = True, coordination = True)
-    # test_learner("Kayne", "Head-final", pp = True, cp = True, coordination = True, user_input = False, input_size = 100)
-    
-    
-    

@@ -1,13 +1,14 @@
+from functools import cmp_to_key
+from minimalist_grammar import MinimalistGrammarTree
 
-import MinimalistGrammarTree
 
 class MinimalistGrammar(object):
-    
+
     def __init__(self, lexicon):
         self.lexicon = lexicon
-        
+
         self.get_features()
-        
+
     def get_features(self):
         self.substrings = []
         self.bases = []
@@ -24,23 +25,25 @@ class MinimalistGrammar(object):
         self.substrings = list(set(self.substrings))
         self.bases = list(set(self.bases))
         self.licensors = list(set(self.licensors))
-        
+
     def __str__(self):
         return str(self.lexicon)
-        
+
     def __eq__(self, other):
         return set([str(item) for item in self.lexicon]) == set([str(item) for item in other.lexicon])
-        
+
     def __ne__(self, other):
         return not (self == other)
-        
+
+
 def get_grammar_from_string(grammar_string):
     tree_strings = grammar_string.strip()[1:-1].split(', [')
-    for i in xrange(1, len(tree_strings)):
+    for i in range(1, len(tree_strings)):
         tree_strings[i] = '[' + tree_strings[i]
     tree_list = [MinimalistGrammarTree.MinimalistGrammarTree(tree_str) for tree_str in tree_strings]
     return MinimalistGrammar(tree_list)
-    
+
+
 def compare_for_susbtrings(one, two):
     substrings = ["@",
                   "Jerry", "George", "Elaine", "Kramer",
@@ -60,13 +63,15 @@ def compare_for_susbtrings(one, two):
             return -1
         else:
             return 0
-    
+
+
 def sort_grammar_string(grammar_string):
     lexicon = get_grammar_from_string(grammar_string).lexicon
-    return sorted(lexicon, cmp = compare_for_susbtrings)
+    return sorted(lexicon, key=cmp_to_key(compare_for_susbtrings))
 
-if __name__ == '__main__':    
+
+if __name__ == '__main__':
     grammar_string = '''
 [[>@: IP =VP =DP]s, [>@: VP =PP =VP]s, [>@: DP =DP -O]s, [>@: IP =IP -Comp]s, [>ran: VP]s, [>walked: VP]s, [>read: VP]s, [>Elaine: DP]s, [>George: DP]s, [>Kramer: DP]s, [>Jerry: DP]s, [>saw: VP =DP]s, [>liked: VP =DP]s, [>assumes: VP =CP]s, [>knows: VP =CP]s, [>says: VP =CP]s, [>thinks: VP =CP]s, [<with: PP =DP]s, [<under: PP =DP]s, [>wrote: VP]s, [>that: CP =IP]s, [<by: PP =DP]s, [<above: PP =DP]s, [<loved: VP =DP]s, [<hated: VP =DP]s]
 '''
-    print sort_grammar_string(grammar_string)
+    print(sort_grammar_string(grammar_string))
