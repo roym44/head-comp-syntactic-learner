@@ -2,7 +2,7 @@ import os
 import math
 import time
 
-from learner.MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
+from learner.sa.MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
 from input.InputGenerator import *
 from input.BlankGrammars import *
 

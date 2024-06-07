@@ -1,4 +1,4 @@
-from learner.SimulatedAnnealingLearner import *
+from learner.sa.SimulatedAnnealingLearner import *
 
 if __name__ == '__main__':
     # run_learner()
