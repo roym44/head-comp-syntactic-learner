@@ -20,14 +20,12 @@
 \usepackage{fancyhdr}			% for header in each page
 \pagestyle{fancy}
 
-\begin{document}	
+\begin{document}
 
 \begin{titlepage}
     \begin{center}
 	\vspace*{2cm}
         	\huge
-	% use the word "evolutionary"
-	% simulated annealing - "SA", genetic algorithm - "GA"
         	\textbf{Learning Head-Complement Order with Minimalist Grammars \newline \\ Using a genetic algorithm}
 
 
@@ -62,14 +60,16 @@
 Head-Complement order varies between and within languages. Several theories have been proposed to describe how this might be represented mentally. However, all current theories agree that some element of it must be learned – either the order itself or some sort of appropriate movement.
 These theories can be explored and compared using a computational learning perspective, and first steps toward this comparison were made by Avraham (2017). However, current results show the learner prefers the "wrong" grammar over the expected grammar.
 
-In this paper (which compremises the first part of my seminar paper), I implemented a genetic based algorithm for Avraham's learner, providing a different approach for finding the best grammar during the learning process (opposed to Simulated Annealing).
+% (which compremises the first part of my seminar paper),
+In this paper, I implemented a genetic based algorithm for Avraham's learner, providing a different approach for finding the best grammar during the learning process (opposed to Simulated Annealing).
 The purpose is to improve the learning process, and have the learner arrive at the expected grammar.  Switching from Simulated Annealing to a genetic algorithm is the initial step in this direction.
+
+%The results show.
 % step one - genetic instead of simulated annealing
 % step two - a learner that works in several steps
 % step three - adding more syntactic structures in addition to coordination (topicalization & questions)
 % step four - frequency analysis
 Hopefully, this will enable us to advance to the next phase, where comparisons can be made between the different theories.
-%The results show.
 }
 
 % -------------------------------------------------------
@@ -78,6 +78,7 @@ Hopefully, this will enable us to advance to the next phase, where comparisons c
 \section{Introduction} 
 % Simulated Annealing (henceforth SA)
 % genetic algorithm (henceforth GA)
+% use the word "evolutionary"
 Schwa deletion in French is a phonological pattern that has been extensively researched in phonological literature. A specific instance of such deletion was presented by Dell (1973) in his famous book "Les règles et les sons" (The rules and sounds) under "Schwas en syllabes contiguës" (Schwas in contiguous syllables) among many other cases of schwa deletion. This specific phenomenon is known as Optional Schwa Deletion (henceforth OSD), and has been examined several times later on,  challenging various phonological theories. A question that arises is whether native speakers of French approve/disprove of the different options of deleting the schwa in some cases as Dell suggested.\\
 
 The goal of this paper is to try to answer this question by conducting an experiment, in order to determine whether Dell's findings are characteristic of  French speakers today. 
@@ -85,15 +86,15 @@ In section 2, I introduce the theoretical background for my work (Head-Complemen
 Then,  in section 3,  I present the implementation of the genetic algorithm. 
 Finally,  in section 4,  I summarize the conclusions that I draw from my work.
 
+
+% -------------------------------------------------------
+% 2 - Background (Avraham 1, 2, 3)
+% -------------------------------------------------------
 \clearpage
-% -------------------------------------------------------
-% 2 - Background (Avraham 1 - Head-Complement order)
-% -------------------------------------------------------
 \section{Background} 
 In linguistics, the study of languages, phonology is the study of their pronunciation,  the sound system of a language and its properties.
 
-\subsection{Head-Complement Order} % all the things Roni said about this in class, ending in Tomer's work - should I bring it now? or in the second half? I think it depends on the amount of time I'll have - but to the final paper it is important (and adds 1 page or 2!)
-
+\subsection{Head-Complement Order} % (Avraham 1 - Head-Complement order)
 
 First, the 
 % FUTURE: History in Linguistic literature - expand more on the history and everything Roni mentioned in parsing seminar, but it's not relevant now, only for the second part of the paper in learning seminar, when we can actually begin comparing the theories
@@ -106,7 +107,6 @@ First, the
 their language that allows them to produce and comprehend words and sentences that they have never heard before. The description of that knowledge is called a Grammar, and it is what humans are assumed to acquire when acquiring language. This led to the thought that humans are born with some characterization of the set of grammars that they are able to acquire,  which Chomsky proposed to call UG.
 \end{enumerate}
 
-
 \subsection{Theoretical Models for Learning} % (Avraham 2 - Theoretical Models for Learning)
 To approach this from a computational learning perspective, several theoretical models were used:
 \begin{enumerate}
@@ -118,6 +118,7 @@ To approach this from a computational learning perspective, several theoretical 
 \end{enumerate}
 
 % Current implementation (Avraham 3 - Implementing Head-Direction Learners)
+\subsection{Current Implementation} 
 These were all implemented by Avraham in the following manner:
 \begin{enumerate}
   \item \textbf{Formalism (MG)}: TBD
@@ -125,10 +126,12 @@ These were all implemented by Avraham in the following manner:
   \item \textbf{Metric (MDL)}: TBD
 \end{enumerate}
 
-
-
+% -------------------------------------------------------
+% 3 - Learning algorithm (Avraham 3 - SA)
+% -------------------------------------------------------
+\clearpage
+\section{Learning Algorithm} 
 Now we move on to focus on the learning component, more specifically the learning algorithm used.
-
 
 % following subsections (my proposal)
 \subsection{SA background} % (nur)
@@ -143,43 +146,16 @@ TBD
 % (i) Genetic algorithms (what is it? what is the general structure?)
 % (ii) Why choose GA/Use of evolutionary algrithms in statistical NLP bla bla (advantages, why did I choose to go in this direction? based on various articles I have read - צריך לעשות פה סקירות ספרות קטנה ולשכנע למה אני מנסה לממש כזה דבר))
 
-
-\subsection{OSD in French}
-% intro
-The vowel transcribed as [ə] in French is a mid front rounded vowel whose specific realization varies across contexts and dialects.  It has been the subject of a large body of research,  because (among other reasons) it is optional in a variety of positions.  In this paper I discuss a specific context that Dell suggested in 1973 in his book translated as \textit{Generative phonology and French phonology}.  A big part of that book is devoted to a detailed discussion of the behaviour of schwa. Among many cases of schwa deletion, Dell presented this case of OSD as follows, starting with the following rule:\\
-
-% present the rule, and examples
-\begin{center}
-\textbf{VCE (optional): ə → ø / V\#C\_} \\
-(meaning, a schwa is deleted after a vowel, word boundary and a consonant)
-\end{center}
-When several successive syllables contain schwas likely to be erased by VCE, a speaker speaking at a normal rate tends to drop the maximum number of schwas possible.  This is a trend rather than an absolute necessity. \\ 
-Let's consider \textit{(tu as) envie de te battre} "(you) feel like fighting",  represented as [\textipa{\~avi\*\#d@\*\#t@\*\#batr}].
-According to Dell, we can decide for each environment whether to delete the schwa or not, and that's how we get the following options:
-\begin{enumerate}
-  \item Output is [\textipa{\~avi\*\#d@\*\#t@\*\#batr}] - no deletion
-  \item Output is [\textipa{\~avi\*\#d\*\#t@\*\#batr}] - the first schwa is deleted, but not the second 
-  \item Output is [\textipa{\~avi\*\#d@\*\#t\*\#batr}] - the second schwa is deleted, but not the first 
-  \item Output is *[\textipa{\~avi\*\#d\*\#t\*\#batr}] - deleting both schwas is not possible
-\end{enumerate}
-% self-bleeding, left-to-right
-We will analyze the application of the rule left-to-right:
+% useful code
 \begin{itemize}
-  \item Given the basic form [\textipa{\~avi\*\#d@\*\#t@\*\#batr}],  we can first decide to delete the first schwa or not, because the environment is met.
-  \item If we apply it, we get option 2 - and then the environment for the second schwa is not met and we have no more options.
-  \item If not, we continue to the second schwa and we can again decide whether to delete or not.
-  \item If we apply the rule, we get option 3, otherwise we stay with option 1 (the original one).
-  \item We don't generate option 4 - and that is the wanted situation.
+  \item A
 \end{itemize}
 
-\subsection{OSD's Significance} % Iterativity, local optionality
-As mentioned, OSD has several interesting attributes that gained attention in literature.  I would like to focus on two important appearences of OSD in phonological history: the first is related to Iterative rule application (as an argument for self-bleeding),  and the second is in the field of OT and how it deals with local optionality. I will give a brief explanation on each context in which OSD was mentioned, and focus on its properties that made it relevant to those contexts.\\
-
 \begin{description}
-   \item[Iterativity] This example from French was used as an argument against a theory of Chomsky \& Halle (1968) which declared that rules operate non-iteratively: that is, if a specific rule has several environments in which it can apply, it would apply to all of them together - simultaneously.  The prediction of a non-iterative application is no self-feeding/self-bleeding interactions. The reason OSD is an evidence against their theory, is due to the fact that here there seems to be an interaction of \textit{self-bleeding}: if the rule applies in one position, it ruins its potential environment to apply in a second position. If the rule were to apply simultaneously on both environments in the input, it would apply twice - and that is not what actually happens (according to Dell). It appears to be that if there are several environments, the deletion must take place one after another, so that the rule can bleed itself and generate the correct output.
+   \item[Iterativity] This example
 \end{description}
 
-\subsection{Research Question} % my proposal and its motivation
+\subsection{Research Question / Proposal} % my proposal and its motivation
 As previously stated, the data regarding OSD which was cited many times later, comes from Dell's work. As of now, we do not know exactly to what extent his generalisations are correct, and whether French speakers do prefer these patterns in different combinations of words.
 
 My main research question is whether speakers of French are willing to accept the patterns Dell suggested in his analysis of OSD back in 1973.  Do they prefer the opaque (caused by self-counterbleeding) or transparent (caused by self-bleeding) forms?
@@ -191,7 +167,7 @@ The importance of knowing whether Dell's suggestions are characteristic of speak
 
 \clearpage
 % -------------------------------------------------------
-% 3 - Main: Implementing GA and running the experiments
+% 4 - Main: Implementing GA and running the experiments
 % -------------------------------------------------------
 \section{Implementation} 
 In order to test native French speakers' knowledge of their language to verify Dell's analysis, they were exposed to recordings of different pronunciation options and asked to rate them.  For online data collection,  the software PsyToolkit was used (Stoet, 2010, 2017). After constructing the basic phrases myself, I consulted a French speaker who also recorded in her voice all the different versions as described below. 
@@ -200,26 +176,6 @@ In order to test native French speakers' knowledge of their language to verify D
 % How do I implement a GA here? How do I define the different objects needed?
 % How do I incorporate it in the given code base?
 % TODO: the work included first adapting the current code from python 2 to python 3.11 which will enable further and more modern development 
-
-\subsection{Design}
-While designing the experiment, my goal was to make it as simple and concise as possible, to obtain more engagement from people completing it fully. Therefore, I decided to define the following conditions:
-\begin{itemize}
-  \item 4 main phrases.
-  \item About 3-5 different pronunciations of each.
-  \item The phrases contain only 2 schwas.
-\end{itemize}
-% Phrases (a)-(b)
-First,  I constructed 2 phrases based on the [kstr] case. The first one is the original phrase presented by Dell - \textit{il veut que ce travail soit bien fait}, where \textit{que} and \textit{ce} are the source for the schwas, leading to the sequence: [\textipa{v\"o\*\#k@\*\#s@\*\#tra}].
-The second phrase is based on the same principle but with a different sequence: [kspr]. Using a French corpus I found online (\cite{corpus}), I was searching for similar sequences to [kstr] (that appears in the word \textit{extraordinare}.) I came up with [dstr] as an option, but could not find any French words containing it. I found the sequence [kspr] (orthographically "xpr") such as in the verb \textit{exprimer} "to express", which meets the conditions. I constructed the phrase \textit{elle veut que ce produit soit parfait} "she wants this product to be perfect". We have:
-\begin{enumerate} [label=(\alph*)]
-  \item \textit{il veut que ce travail soit bien fait} with [\textipa{v\"o\*\#k@\*\#s@\*\#tra}]
-  \item \textit{elle veut que ce produit soit parfait} with [\textipa{v\"o\*\#k@\*\#s@\*\#pro}]
-\end{enumerate}
-For both (a) and (b), I wanted to record the 3 basic options: no deletion, left-schwa deleted, right-schwa deleted. Since these phrases can be pronounced easily with the 2 schwas deleted,  I included this version to be recorded. I believed it would be interesting to compare between the fully deleted version, and a sentence containing the sequence as found in the language - were it should be perfectly grammatical and approved.  For this reason I added two extra phrases that contain \textit{extraordinare} and \textit{exprimer}:
-\begin{itemize}
-  \item \textit{c’est \textbf{extraordinaire} ce qu’il fait} "it's amazing what he does"
-  \item \textit{je peux \textbf{m’exprimer} sans begayer} "I can express myself without stuttering"
-\end{itemize}
 
 % building 
 \subsection{Experiment}
@@ -239,7 +195,7 @@ Therefore, I expect a general correlation with Dell's analysis: phrases 1-3,6-8,
 
 \clearpage
 % -------------------------------------------------------
-% 4 - Conclusions
+% 5 - Conclusions
 % -------------------------------------------------------
 \section{Conclusions}
 
