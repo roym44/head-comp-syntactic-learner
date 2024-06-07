@@ -6,7 +6,7 @@ from learner.sa.MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
 from input.InputGenerator import *
 from input.BlankGrammars import *
 
-LOGS_FOLDER = "logs"
+LOGS_FOLDER = os.path.join("output", "logs")
 log_file = None
 blank_grammar = KAYNE_GRAMMAR_WITH_EMPTY_DP
 
