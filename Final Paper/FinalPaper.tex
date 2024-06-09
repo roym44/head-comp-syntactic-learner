@@ -72,7 +72,7 @@ The purpose is to improve the learning process, and have the learner arrive at t
 % step two - a learner that works in several steps
 % step three - adding more syntactic structures in addition to coordination (topicalization & questions)
 % step four - frequency analysis
-Hopefully, this will enable us to advance to the next phase, where comparisons can be made between the different theories.
+Hopefully, this will enable us to advance to the next phase, where comparisons can be made between the different theories from this computational perspective.
 }
 
 % -------------------------------------------------------
@@ -167,25 +167,25 @@ Another question is related to the direction in which the rule applies. As menti
 
 The importance of knowing whether Dell's suggestions are characteristic of speakers today is directly related to its historical significance in the discussion over different theories of phonology,  as explained above (the connection between iterativity and opacity, locality, optionality) - that is the motivation for this study. I will try to address this question using an experiment, as described in detail in the following section.
 
-
-\clearpage
 % -------------------------------------------------------
 % 4 - Main: Implementing GA and running the experiments
 % -------------------------------------------------------
+\clearpage
 \section{Implementation} 
 In order to test native French speakers' knowledge of their language to verify Dell's analysis, they were exposed to recordings of different pronunciation options and asked to rate them.  For online data collection,  the software PsyToolkit was used (Stoet, 2010, 2017). After constructing the basic phrases myself, I consulted a French speaker who also recorded in her voice all the different versions as described below. 
 
 \subsection{Refactoring}
 As I took the original code base written by Avraham, modifications and adjustments have been made in order to allow further and more modern development. The main changes committed are:
 \begin{itemize}
+  % HCSL-1
   \item Upgrading the environment from python 2.7 to python 3.11.
   \item Packging the different modules to make the project more coherent, and especially the learning modules more independent and interchangeable.
+  % HCSL-3  
   \item Adding proper configuration for the project to allow better control over different experiments and learning options.
 \end{itemize}
 
 % How do I implement a GA here? How do I define the different objects needed?
 % How do I incorporate it in the given code base?
-
 
 % building 
 \subsection{Experiment}
