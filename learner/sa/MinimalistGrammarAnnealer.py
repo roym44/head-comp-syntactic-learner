@@ -502,7 +502,7 @@ class MinimalistGrammarAnnealer(object):
             return 0
         if number == 1:
             return 1
-        return int(math.ceil(math.self.logger.info(number, 2)))
+        return int(math.ceil(math.log(number, 2)))
 
     def get_grammar_length(self, hypothesis):
         # We will encode thus:
@@ -608,32 +608,3 @@ class MinimalistGrammarAnnealer(object):
         total_length += k
 
         return total_length
-
-
-if __name__ == '__main__':
-    from minimalist_grammar.MinimalistGrammar import get_grammar_from_string
-
-    input = ["John fell", "Paul fell", "George fell", "Ringo fell"]
-    print(input)
-
-    grammar_string_1 = "[[>@: IP]s, [>John: IP =IP]s, [>Paul: IP =IP]s, [>George: IP =IP]s, [>Ringo: IP =IP]s, [>fell: IP =IP]s]"  # , [>in: IP =IP]s, [>love: IP =IP]s]"
-    print(grammar_string_1)
-    grammar_string_2 = "[%s]" % (", ".join(["[>%s: IP]s" % (blb,) for blb in input]),)
-    print(grammar_string_2)
-    grammar_string_3 = "[[>@: IP =VP =DP]s, [>John: DP]s, [>Paul: DP]s, [>George: DP]s, [>Ringo: DP]s, [>fell: VP]s]"
-    print(grammar_string_3)
-
-    grammar_1 = get_grammar_from_string(grammar_string_1)
-    grammar_2 = get_grammar_from_string(grammar_string_2)
-    grammar_3 = get_grammar_from_string(grammar_string_3)
-
-    from input.BlankGrammars import *
-    from loguru import logger
-    annealer = MinimalistGrammarAnnealer(logger, input, KAYNE_GRAMMAR_WITH_HACK, "Kayne")
-
-    energy = annealer.energy(grammar_1)
-    print("Energy 1:", energy)
-    energy = annealer.energy(grammar_2)
-    print("Energy 2:", energy)
-    energy = annealer.energy(grammar_3)
-    print("Energy 3:", energy)

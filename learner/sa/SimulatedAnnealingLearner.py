@@ -8,16 +8,12 @@ from input.InputGenerator import *
 class SimulatedAnnealingLearner(object):
 
     def __init__(self, logger, annealer: MinimalistGrammarAnnealer, initial_temperature, initial_hypothesis=None):
-        self.current_energy = None
         self.logger = logger
         self.annealer = annealer
-
-        if initial_hypothesis:
-            self.hypothesis = initial_hypothesis
-        else:
-            self.hypothesis = self.annealer.get_initial_hypothesis()
-        self.logger.info("Initial hypothesis: %s" % (self.hypothesis,))
+        self.hypothesis = initial_hypothesis if initial_hypothesis else self.annealer.get_initial_hypothesis()
+        self.logger.info(f"Initial hypothesis: {self.hypothesis}")
         self.temperature = initial_temperature
+        self.current_energy = None
         self.iteration = 0
         self.total_time = 0
 
@@ -27,23 +23,23 @@ class SimulatedAnnealingLearner(object):
         self.current_energy = self.annealer.energy(self.hypothesis)
         self.annealer.input_parsing_dict = self.annealer.new_parsing_dict
         for i in range(steps):
-            self.logger.info("\nIteration: %d" % (self.iteration,))
-            print("Time: %s" % (time.strftime("%Y_%m_%d__%H_%M_%S: "),))
-            self.logger.info("Hypothesis: %s" % (self.hypothesis,))
-            self.logger.info("Energy: %d" % (self.current_energy,))
-            self.logger.info("Temperature: %f" % (self.temperature,))
+            self.logger.info(f"\nIteration: {self.iteration}")
+            print(f"Time: {time.strftime('%Y_%m_%d__%H_%M_%S: ')}")
+            self.logger.info(f"Hypothesis: {self.hypothesis}")
+            self.logger.info(f"Energy: {self.current_energy}")
+            self.logger.info(f"Temperature: {self.temperature}")
 
             # I made the neighbour function also calculate the energy to save time.
             new_hypothesis, new_energy = self.annealer.random_neighbour(self.hypothesis)
             if new_hypothesis is not None:
-                self.logger.info("New Energy: %d" % (new_energy,))
+                self.logger.info(f"New Energy: {new_energy}")
                 delta = new_energy - self.current_energy
-                self.logger.info("Delta: %d" % (delta,))
+                self.logger.info(f"Delta: {delta}")
                 if delta <= 0:
                     p = 1
                 else:
                     p = math.e ** (0 - (delta / self.temperature))
-                self.logger.info("Change probability: %f" % (p,))
+                self.logger.info(f"Change probability: {p}")
                 if random.random() < p and self.hypothesis != new_hypothesis:
                     self.hypothesis = new_hypothesis
                     self.current_energy = new_energy
@@ -63,7 +59,7 @@ class SimulatedAnnealingLearner(object):
         elapsed = time.time() - start
         self.total_time += elapsed
 
-        self.logger.info("\nIteration: %d\nHypothesis: %s\nEnergy: %d\nTemperature: %f\nElapsed time: %d\n" % (
-            self.iteration, self.hypothesis, self.current_energy, self.temperature, time.time() - start))
+        self.logger.info(f"\nIteration: {self.iteration}\nHypothesis: {self.hypothesis}\nEnergy: {self.current_energy}\n"
+                         f"Temperature: {self.temperature}\nElapsed time: {time.time() - start}")
         return self.iteration, self.hypothesis, self.temperature
 

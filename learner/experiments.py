@@ -85,22 +85,22 @@ def test_learner(learner_type, input_type, pp=True, cp=False, coordination=False
     init_log_file(learner_type, input_type, pp, cp)
     print("Time: %s" % (time.strftime("%Y_%m_%d__%H_%M_%S: "),))
 
-    text_input = generate_input(input_type, pp, cp, coordination, input_size)
-    logger.info("Input is: %s" % (text_input,))
+    initial_input = generate_input(input_type, pp, cp, coordination, input_size)
+    logger.info("Input is: %s" % (initial_input,))
 
     global blank_grammer
 
-    annealer = MinimalistGrammarAnnealer(logger, text_input, blank_grammar, learner_type)
+    annealer = MinimalistGrammarAnnealer(logger, initial_input, blank_grammar, learner_type)
     logger.info("Initial Temperature: %f" % (temperature,))
     learner = SimulatedAnnealingLearner(logger, annealer, temperature)
 
     if user_input:
         while True:
-            text_input = text_input("Steps: ")
-            if text_input == 'd':
+            initial_input = input("Steps: ")
+            if initial_input == 'd':
                 import pdb;
                 pdb.set_trace()
-            steps = int(text_input)
+            steps = int(initial_input)
             learner.anneal(steps)
     else:
         previous_hypothesis = learner.hypothesis
