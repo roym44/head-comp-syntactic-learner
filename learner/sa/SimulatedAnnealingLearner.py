@@ -23,8 +23,8 @@ class SimulatedAnnealingLearner(object):
         self.current_energy = self.annealer.energy(self.hypothesis)
         self.annealer.initial_input_parsing_dict = self.annealer.new_parsing_dict
         for i in range(steps):
-            self.logger.info(f"\nIteration: {self.iteration}")
-            print(f"Time: {time.strftime('%Y_%m_%d__%H_%M_%S: ')}")
+            self.logger.info(f"Iteration: {self.iteration}")
+            self.logger.info(f"Time: {time.strftime('%Y_%m_%d__%H_%M_%S: ')}")
             self.logger.info(f"Hypothesis: {self.hypothesis}")
             self.logger.info(f"Energy: {self.current_energy}")
             self.logger.info(f"Temperature: {self.temperature}")

@@ -16,6 +16,7 @@ cp_transitive = ["knew", "said", "thought", "assumed"]
 prepositions = ["with", "by", "above", "under"]
 definite_articles = ["the", "a", "this", "some"]
 complementizers = ["that"]
+# NOTE: this is added only if with_coordination is True
 conjunctors = ["and"]  # , "or"]
 delimiter = " "
 

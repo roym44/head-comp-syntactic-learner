@@ -9,9 +9,11 @@ class Experiment(object):
         self.logs_folder = logs_folder
         self.blank_grammar = blank_grammar
         self.algorithm = algorithm
+        # logger.remove() # remove stdout logger
+        self.current_sink = None
 
     def init_log_file(self, learner, text_input, pp, cp):
-        run_string = "%s, %s" % (learner, text_input)
+        run_string = f"{learner}, {text_input}"
         elements = []
         if pp:
             elements.append("PP")
@@ -19,8 +21,11 @@ class Experiment(object):
             elements.append("CP")
         if elements:
             run_string += ", " + " & ".join(elements)
-        log_file_name = time.strftime("log_%Y_%m_%d__%H_%M_%S") + " - %s.txt" % (run_string,)
-        logger.add(os.path.join(self.logs_folder, log_file_name))
+        log_file_name = f"log_{time.strftime('%Y_%m_%d__%H_%M_%S')} - {run_string}.txt"
+        # we stop writing to current log file and start writing to the new one
+        if self.current_sink is not None:
+            logger.remove(self.current_sink)
+        self.current_sink = logger.add(os.path.join(self.logs_folder, log_file_name))
 
     def generate_input(self, input_type, pp, cp, coordination, size=50):
         transitive_types = {
@@ -59,19 +64,10 @@ class Experiment(object):
         text_input = text_input[:-1].split("#")
         return text_input
 
-    def test_learner(self, learner_type, input_type, pp=True, cp=False, coordination=False,
-                     input_size=50, temperature=100):
-        # TODO: make sure we don't add log files and we keep writing to old ones
-        self.init_log_file(learner_type, input_type, pp, cp)
-        print("Time: %s" % (time.strftime("%Y_%m_%d__%H_%M_%S: "),))
-
-        initial_input = self.generate_input(input_type, pp, cp, coordination, input_size)
-        logger.info("Input is: %s" % (initial_input,))
-
+    def learn_sa(self, initial_input, learner_type, temperature):
         annealer = MinimalistGrammarAnnealer(logger, initial_input, self.blank_grammar, learner_type)
         logger.info("Initial Temperature: %f" % (temperature,))
         learner = SimulatedAnnealingLearner(logger, annealer, temperature)
-
         previous_hypothesis = learner.hypothesis
         while learner.iteration % 300 == 0:
             learner.anneal(300)
@@ -80,7 +76,32 @@ class Experiment(object):
             previous_hypothesis = learner.hypothesis
         return learner.hypothesis
 
+    def learn_ga(self, initial_input, learner_type):
+        raise Exception("Genetic Algorithm not implemented")
+
+    def test_learner(self, learner_type, input_type, pp=True, cp=False, coordination=False,
+                     input_size=50, temperature=100):
+        """
+        Testing a specific learner with a specific input
+        """
+        self.init_log_file(learner_type, input_type, pp, cp)
+        logger.info(f"Time: {time.strftime('%Y_%m_%d__%H_%M_%S: ')}")
+
+        initial_input = self.generate_input(input_type, pp, cp, coordination, input_size)
+        logger.info("Input is: %s" % (initial_input,))
+
+        if self.algorithm == "SA":
+            hypothesis = self.learn_sa(initial_input, learner_type, temperature)
+        elif self.algorithm == "GA":
+            hypothesis = self.learn_ga(initial_input, learner_type)
+        else:
+            raise Exception("Unsupported algorithm")
+        return hypothesis
+
     def sanity_test(self, learner_configs, pp=True, cp=True, coordination=False, input_size=50, temperature=100):
+        """
+        Testing all learners with their configurations according to the learner_configs dictionary
+        """
         for learner, configs in learner_configs.items():
             print(f"{learner} learner:")
             for config in configs:
