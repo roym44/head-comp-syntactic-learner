@@ -21,7 +21,7 @@ class SimulatedAnnealingLearner(object):
         start = time.time()
         total_steps = self.iteration + steps
         self.current_energy = self.annealer.energy(self.hypothesis)
-        self.annealer.input_parsing_dict = self.annealer.new_parsing_dict
+        self.annealer.initial_input_parsing_dict = self.annealer.new_parsing_dict
         for i in range(steps):
             self.logger.info(f"\nIteration: {self.iteration}")
             print(f"Time: {time.strftime('%Y_%m_%d__%H_%M_%S: ')}")
@@ -43,7 +43,7 @@ class SimulatedAnnealingLearner(object):
                 if random.random() < p and self.hypothesis != new_hypothesis:
                     self.hypothesis = new_hypothesis
                     self.current_energy = new_energy
-                    self.annealer.input_parsing_dict = self.annealer.new_parsing_dict
+                    self.annealer.initial_input_parsing_dict = self.annealer.new_parsing_dict
                     self.logger.info("Changed hypotheses.")
                 else:
                     self.logger.info("Didn't change hypotheses.")

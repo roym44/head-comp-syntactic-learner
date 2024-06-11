@@ -56,7 +56,6 @@ def get_japanese_like_text(size):
 
         text += sentence
         text += "#"
-
     return text
 
 
@@ -105,6 +104,7 @@ def generate_customizable_sentence(with_transitive=None,
     # This just makes a copy of the list so it doesn't get changed.
     verbs = sorted(intransitive)
     if with_transitive:
+        # TODO: replace += with extends? or something else that adds to the same list, doesn't create a new list in memory every time
         verbs += transitive
     if with_cp and recursion_depth > 0:
         verbs += cp_transitive
