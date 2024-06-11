@@ -5,8 +5,10 @@ from minimalist_grammar import MinimalistGrammarTree
 class MinimalistGrammar(object):
 
     def __init__(self, lexicon):
+        self.licensors = None
+        self.bases = None
+        self.substrings = None
         self.lexicon = lexicon
-
         self.get_features()
 
     def get_features(self):
