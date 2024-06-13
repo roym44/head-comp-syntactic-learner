@@ -292,6 +292,7 @@ class NumberMinimalistGrammarTree(object):
         return '[%s]%s' % (NODES_DELIMITER.join([str(node) for node in self.nodes]), self.type)
 
     # TODO: is this good enough? I had to implement it because in python3.11 there's no default hash
+    # str(self) can crash with Word Learner for some reason (self.nodes is empty)
     def __hash__(self):
         return hash(str(self))
 
