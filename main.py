@@ -16,8 +16,8 @@ if __name__ == '__main__':
     # exp.test_learner("Kayne", "Head-initial", pp=True, cp=True, coordination=True)
 
     # no coordination
-    exp = Experiment(LOGS_FOLDER, KAYNE_GRAMMAR_WITH_EMPTY_DP_NO_CO, "SA")
-    exp.test_learner("Kayne", "Head-initial", pp=True, cp=True, coordination=False)
+    exp = Experiment(LOGS_FOLDER, KAYNE_GRAMMAR_WITH_EMPTY_DP_NO_CO)
+    exp.test_learner("Kayne", "Head-initial", pp=True, cp=True, coordination=False, algorithms=["SA"])
 
     # exp.test_learner("Kayne", "Head-final", pp=True, cp=True, coordination=False)
     # exp.sanity_test(ALL_CONFIGS, pp=True, cp=True, coordination=False)

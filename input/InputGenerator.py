@@ -12,7 +12,9 @@ proper_nouns = ["Jerry", "George", "Elaine", "Kramer"]  # , "Vandalay", "Pennypa
 improper_nouns = ["boy", "girl", "dog", "cat"]  # , "man", "woman", "hedgehog", "llama", "postman", "comedian"]
 transitive = ["liked", "saw", "loved", "hated"]  # , "hugged", "tickled", "kissed", "found", "punched", "kicked"]
 intransitive = ["ran", "walked", "read", "wrote"]  # , "ate", "drank", "slept", "woke", "whistled", "laughed"]
-cp_transitive = ["knew", "said", "thought", "assumed"]
+# at some point he switched cp_transitive verbs to past, they were in present tense before
+# cp_transitive = ["knew", "said", "thought", "assumed"]
+cp_transitive = ["knows", "says", "thinks", "assumes"]
 prepositions = ["with", "by", "above", "under"]
 definite_articles = ["the", "a", "this", "some"]
 complementizers = ["that"]

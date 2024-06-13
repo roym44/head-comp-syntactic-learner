@@ -5,15 +5,14 @@ from learner.sa.SimulatedAnnealingLearner import *
 
 
 class Experiment(object):
-    def __init__(self, logs_folder, blank_grammar, algorithm):
+    def __init__(self, logs_folder, blank_grammar):
         self.logs_folder = logs_folder
         self.blank_grammar = blank_grammar
-        self.algorithm = algorithm
         # logger.remove() # remove stdout logger
         self.current_sink = None
 
-    def init_log_file(self, learner, text_input, pp, cp):
-        run_string = f"{learner}, {text_input}"
+    def init_log_file(self, learner, text_input, pp, cp, algorithm):
+        run_string = f"{learner}, {algorithm}, {text_input}"
         elements = []
         if pp:
             elements.append("PP")
@@ -80,24 +79,23 @@ class Experiment(object):
         raise Exception("Genetic Algorithm not implemented")
 
     def test_learner(self, learner_type, input_type, pp=True, cp=False, coordination=False,
-                     input_size=50, temperature=100):
+                     input_size=50, temperature=100, algorithms=None):
         """
         Testing a specific learner with a specific input
         """
-        self.init_log_file(learner_type, input_type, pp, cp)
-        logger.info(f"Time: {time.strftime('%Y_%m_%d__%H_%M_%S: ')}")
-
         initial_input = self.generate_input(input_type, pp, cp, coordination, input_size)
         logger.info("Input is: %s" % (initial_input,))
 
-        if self.algorithm == "SA":
-            hypothesis = self.learn_sa(initial_input, learner_type, temperature)
-        elif self.algorithm == "GA":
-            hypothesis = self.learn_ga(initial_input, learner_type)
-        else:
-            raise Exception("Unsupported algorithm")
-        return hypothesis
-
+        for a in algorithms:
+            self.init_log_file(learner_type, input_type, pp, cp, a)
+            logger.info(f"Time: {time.strftime('%Y_%m_%d__%H_%M_%S: ')}")
+            if a == "SA":
+                hypothesis = self.learn_sa(initial_input, learner_type, temperature)
+            elif a == "GA":
+                hypothesis = self.learn_ga(initial_input, learner_type)
+            else:
+                raise Exception("Unsupported algorithm")
+            logger.info(f"Final hypothesis: {hypothesis}")
     def sanity_test(self, learner_configs, pp=True, cp=True, coordination=False, input_size=50, temperature=100):
         """
         Testing all learners with their configurations according to the learner_configs dictionary
