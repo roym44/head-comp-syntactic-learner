@@ -6,14 +6,13 @@ from typing import List, Tuple, Callable, TypeVar, Generic, Optional
 
 import matplotlib.pyplot as plt
 import seaborn as sns
-from loguru import logger
 
 # Define a generic type variable for the individual's type
 IndividualType = TypeVar("IndividualType")
 ExtraArgType = TypeVar("ExtraArgType")
 
-# Update the function types to use the generic type
-GenerateIndividualType = Callable[[], Tuple[IndividualType, float]]
+GenomeType = Tuple[IndividualType, float]
+GenerateIndividualType = Callable[[], GenomeType]
 FitnessFunctionType = Callable[[IndividualType, Optional[ExtraArgType]], float]
 MutateFunctionType = Callable[[IndividualType, Optional[ExtraArgType]], IndividualType]
 # Crossover should take two parents and an optional extra argument and return two children
@@ -26,13 +25,12 @@ CrossoverFunctionType = Callable[
 class GeneticAlgorithm(Generic[IndividualType, ExtraArgType]):
     def __init__(
             self,
+            logger,
             fitness_function: FitnessFunctionType[IndividualType, Optional[ExtraArgType]],
             mutate_function: MutateFunctionType[IndividualType, Optional[ExtraArgType]],
-            crossover_function: CrossoverFunctionType[
-                IndividualType, Optional[ExtraArgType]
-            ],
+            crossover_function: CrossoverFunctionType[IndividualType, Optional[ExtraArgType]],
             generate_individual: Optional[GenerateIndividualType[IndividualType]] = None,
-            initial_population: Optional[List[Tuple[IndividualType, float]]] = None,
+            initial_population: Optional[List[GenomeType]] = None,
             population_size: int = 1000,
             max_generations: int = 1000,
             early_stop_generations: int = 100,
@@ -45,6 +43,7 @@ class GeneticAlgorithm(Generic[IndividualType, ExtraArgType]):
         if initial_population is not None and len(initial_population) != population_size:
             raise ValueError("The length of initial_population must be equal to population_size.")
 
+        self.logger = logger
         self.evaluate_fitness = fitness_function
         self.mutate = mutate_function
         self.crossover = crossover_function
@@ -54,18 +53,13 @@ class GeneticAlgorithm(Generic[IndividualType, ExtraArgType]):
         self.extra_arg = extra_arg
         self.fitness_history: List[float] = []
         self.best_fitness_stagnant_counter = 0
-        self.best_individual: Optional[Tuple[IndividualType, float]] = None
-
-        self.population: List[Tuple[IndividualType, float]] = [generate_individual() for _ in
-                                                               range(self.population_size)] \
+        self.best_individual: Optional[GenomeType] = None
+        self.population: List[GenomeType] = [generate_individual() for _ in range(self.population_size)] \
             if generate_individual is not None else initial_population
 
     @staticmethod
-    def selection(
-            population: List[Tuple[IndividualType, float]],
-            tournament_size: int = 5,
-            num_to_select: Optional[int] = None,
-    ) -> List[Tuple[IndividualType, float]]:
+    def selection(population: List[GenomeType], tournament_size: int = 5,
+                  num_to_select: Optional[int] = None) -> List[GenomeType]:
         if num_to_select is None:
             num_to_select = len(population)
 
@@ -99,14 +93,14 @@ class GeneticAlgorithm(Generic[IndividualType, ExtraArgType]):
             if self.best_individual is None or best_individual[1] < self.best_individual[1]:
                 self.best_individual = best_individual
 
-            logger.info(f"Generation {generation}, Best Fitness: {best_individual[1]}")
+            self.logger.info(f"Generation {generation}, Best Fitness: {best_individual[1]}")
             if generation > 0 and self.fitness_history[-1] == self.fitness_history[-2]:
                 self.best_fitness_stagnant_counter += 1
             else:
                 self.best_fitness_stagnant_counter = 0
 
             if self.best_fitness_stagnant_counter >= self.early_stop_generations:
-                logger.info(f"Early stopping triggered after {generation} generations due to stagnant fitness.")
+                self.logger.info(f"Early stopping triggered after {generation} generations due to stagnant fitness.")
                 break
 
             self.evolve()

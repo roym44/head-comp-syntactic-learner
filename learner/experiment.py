@@ -2,7 +2,8 @@ import os
 from loguru import logger
 
 from learner.sa.SimulatedAnnealingLearner import *
-
+from learner.ga.ga import *
+from learner.ga.mg_ga import *
 
 class Experiment(object):
     def __init__(self, logs_folder, blank_grammar):
@@ -64,19 +65,32 @@ class Experiment(object):
         return text_input
 
     def learn_sa(self, initial_input, learner_type, temperature):
-        annealer = MinimalistGrammarAnnealer(logger, initial_input, self.blank_grammar, learner_type)
+        mga = MinimalistGrammarAnnealer.MinimalistGrammarAnnealer(logger, initial_input, self.blank_grammar, learner_type)
         logger.info("Initial Temperature: %f" % (temperature,))
-        learner = SimulatedAnnealingLearner(logger, annealer, temperature)
-        previous_hypothesis = learner.hypothesis
-        while learner.iteration % 300 == 0:
-            learner.anneal(300)
-            if previous_hypothesis == learner.hypothesis:
+        sal = SimulatedAnnealingLearner(logger, mga, temperature)
+        previous_hypothesis = sal.hypothesis
+        while sal.iteration % 300 == 0:
+            sal.anneal(300)
+            if previous_hypothesis == sal.hypothesis:
                 break
-            previous_hypothesis = learner.hypothesis
-        return learner.hypothesis
+            previous_hypothesis = sal.hypothesis
+        return sal.hypothesis
 
     def learn_ga(self, initial_input, learner_type):
-        raise Exception("Genetic Algorithm not implemented")
+        mga = MinimalistGrammarAnnealer.MinimalistGrammarAnnealer(logger, initial_input, self.blank_grammar, learner_type)
+        mg_ga = MGGA(mga)
+        gal = GeneticAlgorithm(
+            logger,
+            mg_ga.evaluate_fitness_grammar,
+            mg_ga.mutate_grammar,
+            mg_ga.crossover_grammar,
+            generate_individual=mg_ga.generate_individual_grammar,
+            population_size=10
+        )
+        best_individual, best_fitness = gal.run()
+        logger.info(f"Best individual: {best_individual}, fitness: {best_fitness}")
+        gal.plot_fitness_history()
+        return best_individual
 
     def test_learner(self, learner_type, input_type, pp=True, cp=False, coordination=False,
                      input_size=50, temperature=100, algorithms=None):

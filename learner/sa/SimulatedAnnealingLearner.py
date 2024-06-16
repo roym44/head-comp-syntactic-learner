@@ -1,7 +1,7 @@
 import math
 import time
 
-from learner.sa.MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
+from learner.MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
 from input.InputGenerator import *
 
 

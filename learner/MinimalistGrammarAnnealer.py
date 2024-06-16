@@ -60,7 +60,7 @@ class MinimalistGrammarAnnealer(object):
             self.words = input_string.split(self.separator)
         self.words = list(set(self.words))
 
-    def get_initial_hypothesis(self):
+    def get_initial_hypothesis(self) -> MinimalistGrammar:
         # Just deleting from a blank grammar:
         lexicon = []
         for tree in self.blank_grammar.lexicon:
