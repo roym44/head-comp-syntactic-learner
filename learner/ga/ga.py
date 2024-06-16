@@ -75,6 +75,9 @@ class GeneticAlgorithm(Generic[IndividualType, ExtraArgType]):
         selected = self.selection(sorted_population[elite_size:])
         new_population = elites[:]
 
+        # TODO: no penalty?
+        # TODO: no cahcing for fitness score?
+
         while len(new_population) < self.population_size:
             parent1, _ = random.choice(selected)
             parent2, _ = random.choice(selected)
