@@ -85,7 +85,7 @@ class Experiment(object):
             mg_ga.mutate_grammar,
             mg_ga.crossover_grammar,
             generate_individual=mg_ga.generate_individual_grammar,
-            population_size=10
+            population_size=6
         )
         best_individual, best_fitness = gal.run()
         logger.info(f"Best individual: {best_individual}, fitness: {best_fitness}")
