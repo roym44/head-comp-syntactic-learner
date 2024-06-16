@@ -29,5 +29,5 @@ Its parameters are the type of learner, the type of input and then almost the sa
   - The numbered parser translates the grammar items from their textual version to their numbered version and then parses.
 
 ### Credits
-- Original codebase was written by [Tomer Avraham](https://www.linkedin.com/in/tomertelem/).
-- GA base class was written by [Matan Abudy](https://matanabudy.com/).
+- Original codebase was written by [Tomer Avraham](https://bitbucket.org/taucompling/headcomplementsyntacticlearner/).
+- GA base class was written by [Matan Abudy](https://github.com/matanabudy/simple-genetic-algorithm-varying-lengths).
