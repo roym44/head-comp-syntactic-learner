@@ -1,6 +1,23 @@
-from learner.SimulatedAnnealingLearner import *
+from input.BlankGrammars import *
+from learner.experiment import *
+
+
+# learner config
+LEARNERS = ("Kayne", "Language", "Category", "Word")
+THEORIES = ("Head-initial", "Head-final", "Mixed-category", "Mixed-word")
+ALL_CONFIGS = { l : THEORIES for l in LEARNERS}
+
+# general
+LOGS_FOLDER = os.path.join("output", "logs")
 
 if __name__ == '__main__':
-    # run_learner()
-    # sanity_test(pp = True, cp = True, coordination = True)
-    test_learner("Kayne", "Head-final", pp=True, cp=True, coordination=True, user_input=False, input_size=100)
+    # with coordination (including "and")
+    # exp = Experiment(LOGS_FOLDER, KAYNE_GRAMMAR_WITH_EMPTY_DP, "SA")
+    # exp.test_learner("Kayne", "Head-initial", pp=True, cp=True, coordination=True)
+
+    # no coordination
+    exp = Experiment(LOGS_FOLDER, KAYNE_GRAMMAR_WITH_EMPTY_DP_NO_CO)
+    exp.test_learner("Kayne", "Head-initial", pp=True, cp=True, coordination=False, algorithms=["SA"])
+
+    # exp.test_learner("Kayne", "Head-final", pp=True, cp=True, coordination=False)
+    # exp.sanity_test(ALL_CONFIGS, pp=True, cp=True, coordination=False)

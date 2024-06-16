@@ -12,10 +12,13 @@ proper_nouns = ["Jerry", "George", "Elaine", "Kramer"]  # , "Vandalay", "Pennypa
 improper_nouns = ["boy", "girl", "dog", "cat"]  # , "man", "woman", "hedgehog", "llama", "postman", "comedian"]
 transitive = ["liked", "saw", "loved", "hated"]  # , "hugged", "tickled", "kissed", "found", "punched", "kicked"]
 intransitive = ["ran", "walked", "read", "wrote"]  # , "ate", "drank", "slept", "woke", "whistled", "laughed"]
-cp_transitive = ["knew", "said", "thought", "assumed"]
+# at some point he switched cp_transitive verbs to past, they were in present tense before
+# cp_transitive = ["knew", "said", "thought", "assumed"]
+cp_transitive = ["knows", "says", "thinks", "assumes"]
 prepositions = ["with", "by", "above", "under"]
 definite_articles = ["the", "a", "this", "some"]
 complementizers = ["that"]
+# NOTE: this is added only if with_coordination is True
 conjunctors = ["and"]  # , "or"]
 delimiter = " "
 
@@ -56,7 +59,6 @@ def get_japanese_like_text(size):
 
         text += sentence
         text += "#"
-
     return text
 
 
@@ -105,6 +107,7 @@ def generate_customizable_sentence(with_transitive=None,
     # This just makes a copy of the list so it doesn't get changed.
     verbs = sorted(intransitive)
     if with_transitive:
+        # TODO: replace += with extends? or something else that adds to the same list, doesn't create a new list in memory every time
         verbs += transitive
     if with_cp and recursion_depth > 0:
         verbs += cp_transitive

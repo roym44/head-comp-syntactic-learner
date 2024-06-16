@@ -2,7 +2,7 @@ import os
 import time
 from igraph import Graph, plot
 
-PICS_FOLDER = "resources"
+PICS_FOLDER = os.path.join("output", "resources")
 
 # This function expects the following structure:
 # step is a tuple with at least two fields.

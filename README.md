@@ -2,9 +2,7 @@
 
 ## How to run the learner
 
-Most files can be run individually to test their own functionality.
-
-To run the learner itself, the file to run is `main.py`.
+To run the learning experiment, run `main.py`.
 Currently, it runs a sanity test which means it runs every type of input on every type of learner (16 scenarios).
 The function sanity_test has several parameters:
 - pp - whether to use PPs in the input. 
@@ -17,6 +15,10 @@ The function sanity_test has several parameters:
 It is also possible to run the function test_learner which only runs one scenario.
 Its parameters are the type of learner, the type of input and then almost the same parameters as sanity_test.
 
+## Resources
+- The logs for each run of the learner are saved in the folder `logs`. 
+- When running the parser, a parse tree can be generated. It will be saved to the folder `resources`.
+
 ## Other notes
 
 - The blank grammar being used is `KAYNE_GRAMMAR_WITH_EMPTY_DP` in the file `BlankGrammars.py`. 
@@ -24,9 +26,8 @@ Its parameters are the type of learner, the type of input and then almost the sa
   - This variable is initialized in the function `set_learner_type` and further modified in the function `random_neighbour` (so changes must be made in both places). 
 - The learner used to use `BottomUpParser.py` as the parser. Since it was too slow, a numbered version was written - `NumberBottomUpParser.py`. 
   - The numbered version has since been updated and improved - these changes aren't in the original parser so it might not work!!!
-  - The numbered parser translates the grammar items from their textual version to their numbered version and then parses. 
-- The logs for each run of the learner are saved in the folder `logs`. 
-- When running the parser, a parse tree can be generated. It will be saved to the folder `resources`.
+  - The numbered parser translates the grammar items from their textual version to their numbered version and then parses.
 
-## Credits
-Original code base was written by [Tomer Avraham](tomerav@gmail.com).
+### Credits
+- Original codebase was written by [Tomer Avraham](https://bitbucket.org/taucompling/headcomplementsyntacticlearner/).
+- GA base class was written by [Matan Abudy](https://github.com/matanabudy/simple-genetic-algorithm-varying-lengths).

@@ -56,36 +56,19 @@
 % -------------------------------------------------------
 \section*{Abstract}
 {\sffamily\small
-
-Head-Complement order varies between and within languages. Several theories have been proposed to describe how this might be represented mentally. However, all current theories agree that some element of it must be learned – either the order itself or some sort of appropriate movement.
-These theories can be explored and compared using a computational learning perspective, and first steps toward this comparison were made by Avraham (2017). However, current results show the learner prefers the "wrong" grammar over the expected grammar.
-
-% (which compremises the first part of my seminar paper),
-In this paper, I implemented a genetic based algorithm for Avraham's learner, providing a different approach for finding the best grammar during the learning process (opposed to Simulated Annealing).
-The purpose is to improve the learning process, and have the learner arrive at the expected grammar.  Switching from Simulated Annealing to a genetic algorithm is the initial step in this direction.
-
+Head-Complement order exhibits variability both across languages and within them. Several theoretical frameworks have been proposed to elucidate its mental representation. However, all current theories concur that a fundamental aspect of this order must be acquired - either the order itself or some mechanism facilitating appropriate movement. An interesting method for exploring and comparing these theories is using a computational learning perspective, and first steps toward this comparison were made by Avraham (2017). \\
+However, current results show the learner sometimes prefers the "wrong" grammar over the expected grammar. In this paper, I implemented a genetic based algorithm for Avraham's learner, providing a different approach for finding the best grammar during the learning process. The purpose is to improve the learning process, and have the learner arrive at the expected grammar, also more efficiently. This transition is the initial step in this direction.Hopefully, this will enable us to advance to the next phase, where comparisons can be made between the different theories from this computational perspective.
 %The results show.
-% step one - genetic instead of simulated annealing
-% step two - a learner that works in several steps
-% step three - adding more syntactic structures in addition to coordination (topicalization & questions)
-% step four - frequency analysis
-Hopefully, this will enable us to advance to the next phase, where comparisons can be made between the different theories.
 }
 
 % -------------------------------------------------------
 % 1 - Introduction
 % -------------------------------------------------------
 \section{Introduction} 
-% Simulated Annealing (henceforth SA)
-% genetic algorithm (henceforth GA)
-% use the word "evolutionary"
-Schwa deletion in French is a phonological pattern that has been extensively researched in phonological literature. A specific instance of such deletion was presented by Dell (1973) in his famous book "Les règles et les sons" (The rules and sounds) under "Schwas en syllabes contiguës" (Schwas in contiguous syllables) among many other cases of schwa deletion. This specific phenomenon is known as Optional Schwa Deletion (henceforth OSD), and has been examined several times later on,  challenging various phonological theories. A question that arises is whether native speakers of French approve/disprove of the different options of deleting the schwa in some cases as Dell suggested.\\
+In order to compare different theories regarding Head-Complement order issue from a computational perspective, several modules need to be developed. Such framework was presented by Avraham utilizing Minimalist Grammars (2017),  in which a learner starts from an initial hypothesis (grammar), and based on a given input learns the best grammar that fits it. The items that comprise the grammar that the learner chooses, are configurable in order to test the different theories (for example, whether we assume movement is possible or not), alongside input variations. This framework indeed showcases a successful learning process for the different theories, in most cases and on basic linguistic inputs. Yet,  there are several improvements that can be made in order to make the original framework better and serve as a codebase for a deeper analysis of this phenomenon (including more complex syntactic inputs). \\
 
-The goal of this paper is to try to answer this question by conducting an experiment, in order to determine whether Dell's findings are characteristic of  French speakers today. 
-In section 2, I introduce the theoretical background for my work (Head-Complement order and previous work),  then I present my proposal for improving the learner and explain how I address it. 
-Then,  in section 3,  I present the implementation of the genetic algorithm. 
-Finally,  in section 4,  I summarize the conclusions that I draw from my work.
-
+The goal of this paper is to revive the current learning framework, while focusing on the algorithm that leads to the best grammar during the learning process, suggesting a genetic algorithm (henceforth GA), over the currently used simulated annealing (henceforth SA). Furthermore,  the current codebase needs adapation and refactoring, to render it easier for future development regarding this syntactic issue.
+In section 2, I introduce the theoretical background (Head-Complement order and previous work),  then I present my proposal for improving the learner and explain its motivation.  Then,  in section 3,  I present the manner of implementation of the genetic algorithm. Finally,  in section 4,  I summarize the conclusions that I draw from my work.
 
 % -------------------------------------------------------
 % 2 - Background (Avraham 1, 2, 3)
@@ -122,7 +105,7 @@ To approach this from a computational learning perspective, several theoretical 
 These were all implemented by Avraham in the following manner:
 \begin{enumerate}
   \item \textbf{Formalism (MG)}: TBD
-  \item \textbf{Parser}: TBD
+  \item \textbf{Parser}: Based on (Stabler 1997) and 
   \item \textbf{Metric (MDL)}: TBD
 \end{enumerate}
 
@@ -137,12 +120,17 @@ Now we move on to focus on the learning component, more specifically the learnin
 \subsection{SA background} % (nur)
 TBD
 \subsection{GA background} % (nur)
+% use the word "evolutionary"
 TBD
 \subsection{GA motivation} % (nur)
 - widely used in recent years
 - there are multiple evidence for the growing use of GA as part of various tasks in computational linguistics
 - phonology (in the lab)
 - among these we find grammar induction
+
+
+
+% http://www.scholarpedia.org/article/Metaheuristics
 % (i) Genetic algorithms (what is it? what is the general structure?)
 % (ii) Why choose GA/Use of evolutionary algrithms in statistical NLP bla bla (advantages, why did I choose to go in this direction? based on various articles I have read - צריך לעשות פה סקירות ספרות קטנה ולשכנע למה אני מנסה לממש כזה דבר))
 
@@ -155,7 +143,7 @@ TBD
    \item[Iterativity] This example
 \end{description}
 
-\subsection{Research Question / Proposal} % my proposal and its motivation
+\subsection{Proposal} % my proposal and its motivation
 As previously stated, the data regarding OSD which was cited many times later, comes from Dell's work. As of now, we do not know exactly to what extent his generalisations are correct, and whether French speakers do prefer these patterns in different combinations of words.
 
 My main research question is whether speakers of French are willing to accept the patterns Dell suggested in his analysis of OSD back in 1973.  Do they prefer the opaque (caused by self-counterbleeding) or transparent (caused by self-bleeding) forms?
@@ -164,18 +152,26 @@ Another question is related to the direction in which the rule applies. As menti
 
 The importance of knowing whether Dell's suggestions are characteristic of speakers today is directly related to its historical significance in the discussion over different theories of phonology,  as explained above (the connection between iterativity and opacity, locality, optionality) - that is the motivation for this study. I will try to address this question using an experiment, as described in detail in the following section.
 
-
-\clearpage
 % -------------------------------------------------------
 % 4 - Main: Implementing GA and running the experiments
 % -------------------------------------------------------
-\section{Implementation} 
+\clearpage
+\subsection{Refactoring}
+As I took the original code base written by Avraham, modifications and adjustments have been made in order to allow further and more modern development. The main changes committed are:
+\begin{itemize}
+  % HCSL-1
+  \item Upgrading the environment from python 2.7 to python 3.11.
+  \item Packging the different modules to make the project more coherent, and especially the learning modules more independent and interchangeable.
+  % HCSL-3  
+  \item Adding proper configuration for the project to allow better control over different experiments and learning options.
+\end{itemize}
+
+\section{GA Implementation} 
 In order to test native French speakers' knowledge of their language to verify Dell's analysis, they were exposed to recordings of different pronunciation options and asked to rate them.  For online data collection,  the software PsyToolkit was used (Stoet, 2010, 2017). After constructing the basic phrases myself, I consulted a French speaker who also recorded in her voice all the different versions as described below. 
-
-
 % How do I implement a GA here? How do I define the different objects needed?
 % How do I incorporate it in the given code base?
-% TODO: the work included first adapting the current code from python 2 to python 3.11 which will enable further and more modern development 
+% Based on the GA class from Matan, now we are left to define the function - fitness, mutation etc.
+
 
 % building 
 \subsection{Experiment}
@@ -214,33 +210,102 @@ There are many ways to analyze the results of the experiment. Given the clear di
 The OSD pattern in French is an interesting phenomenon due to its popularity and significance in literature. The generalizations given by Dell to explain the OSD logic seem to be characteristic of French speakers today. The results of this small experiment I conducted support Dell's propositions, hence they support the analysis of the VCE rule application as left-to-right. Speakers seem to have strong intuitions about this phenomenon.
 My conclusions are certainly tentative because of the previously mentioned confounds in the experiment,  that should be addressed in a more extensive follow-up experiment (given my recommendations).
 
+
+
+% step one - genetic instead of simulated annealing
+% step two - a learner that works in several steps
+% step three - adding more syntactic structures in addition to coordination (topicalization & questions)
+% step four - frequency analysis
 I suggest the following steps that can be taken in order to continue improving this framework:
 - Parser / MG maybe change the formalism
 - Avraham suggestions for improving the learner from 2017 % (maybe ask Roni, are they still really plausible? relevant?)
 
 % FUTURE: what Roni brought up several times - parser/learner for morphology (distributed morphology) combining my work (the final version after learning seminar), not relevant to mention now
 
-\clearpage
 % -------------------------------------------------------
 % Bibliography
 % -------------------------------------------------------
+\clearpage
 \fancyhead{} % clear all header fields
 \fancyhead[RO]{\textit{REFERENCES}}
 
 \begin{thebibliography}{} % - References
 
-% section 1
+% the main work I base on
 \bibitem{texbook} 
 Avraham, T. (2017). 
 Learning Head-Complement Order with Minimalist Grammars.
 MA thesis, Tel Aviv University.
 
+% section 1
+\bibitem{texbook}
+Chomsky, N. (1981). 
+Lectures on Government and Binding.
+Dordrecht: Foris.
+
+\bibitem{texbook}
+Cinque, G. (2017). 
+A microparametric approach to the head-initial/head-final parameter. 
+Linguistic Analysis, 41(3-4), 309-366.
+
+\bibitem{texbook}
+Kayne, R. S. (1994). 
+The antisymmetry of syntax (Vol. 25). 
+MIT press.
 
 % section 2
+\bibitem{texbook}
+Harkema, H. (2001). 
+Parsing minimalist languages. 
+University of California, Los Angeles.
+
+\bibitem{texbook}
+Katzir, R. (2014). 
+A cognitively plausible model for grammar induction. 
+Journal of Language Modelling, 2(2), 213-248.
+
 \bibitem{texbook}
 Stabler, E. (1996). 
 Derivational minimalism. In International conference on logical aspects of computational linguistics (pp. 68-95). 
 Berlin, Heidelberg: Springer Berlin Heidelberg.
+
+% section 3 - web
+\bibitem{texbook}
+Araujo, L. (2007). 
+How evolutionary algorithms are applied to statistical natural language processing. 
+Artificial Intelligence Review, 28, 275-303.
+
+\bibitem{texbook}
+Partlan, R. (2023). 
+Using Genetic Algorithms for Unsupervised Context-Free Grammar Induction.
+Doctoral dissertation, Brandeis University.
+
+\bibitem{texbook}
+Smith, T. C.,  Witten, I. H. (1996). 
+Learning language using genetic algorithms. 
+In Connectionist, Statistical and Symbolic Approaches to Learning for Natural Language Processing 14 (pp. 132-145). Springer Berlin Heidelberg.
+
+% section 3 - tau comp lab, mostly phonology
+\bibitem{texbook}
+Lan, N. (2018). 
+Learning morpho-phonology using the Minimum Description Length Principle and a Genetic Algorithm.
+Master’s thesis, Tel Aviv University.
+
+\bibitem{texbook}
+Rasin, E., Berger, I., Lan, N.,  Katzir, R. (2018). 
+Learning phonological optionality and opacity from distributional evidence. 
+In Proceedings of NELS (Vol. 48, pp. 269-282).
+
+\bibitem{texbook}
+Rasin, E., Berger, I., Lan, N., Shefi, I.,Katzir, R. (2021). 
+Approaching explanatory adequacy in phonology using Minimum Description Length. 
+Journal of Language Modelling, 9(1), 17-66.
+
+% section 4 - GA complexity and discussion
+\bibitem{texbook}
+Shukla, A., Pandey, H. M., Mehrotra, D. (2015, February). 
+Comparative review of selection techniques in genetic algorithm. 
+In 2015 international conference on futuristic trends on computational analysis and knowledge management (ABLAZE) (pp. 515-519). IEEE.
 
 
 \end{thebibliography}
