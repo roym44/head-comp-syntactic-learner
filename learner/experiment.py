@@ -65,7 +65,7 @@ class Experiment(object):
         return text_input
 
     def learn_sa(self, initial_input, learner_type, temperature):
-        mga = MinimalistGrammarAnnealer.MinimalistGrammarAnnealer(logger, initial_input, self.blank_grammar, learner_type)
+        mga = MinimalistGrammarAnnealer(logger, initial_input, self.blank_grammar, learner_type)
         logger.info("Initial Temperature: %f" % (temperature,))
         sal = SimulatedAnnealingLearner(logger, mga, temperature)
         previous_hypothesis = sal.hypothesis

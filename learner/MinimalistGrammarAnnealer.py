@@ -101,7 +101,10 @@ class MinimalistGrammarAnnealer(object):
 
         while neighbour is None and retry_count < 10:
             option = random.choice(neighbour_functions)
-            neighbour, energy = option(hypothesis)
+            try:
+                neighbour, energy = option(hypothesis)
+            except Exception as e:
+                self.logger.info(f"random_neighbour(): Exception {e}")
             retry_count += 1
         if retry_count == 10:
             self.logger.info("Couldn't find better hypothesis.")
@@ -146,6 +149,7 @@ class MinimalistGrammarAnnealer(object):
 
         self.logger.info("Trying to delete: " + str(removed))
         if removed.head.substring == EMPTY_STRING:
+            self.logger.info(f"delete_once(): removed = {removed.head.substring}")
             return None, None
 
         new_grammar = MinimalistGrammar(new_lexicon)
@@ -153,7 +157,8 @@ class MinimalistGrammarAnnealer(object):
             energy = self.energy(new_grammar, deleted=removed)
         except KeyboardInterrupt as e:
             raise e
-        except:
+        except Exception as e:
+            self.logger.info(f"delete_once(): Exception {e}")
             return None, None
         self.logger.info("Deleting: " + str(removed))
         return new_grammar, energy
@@ -224,12 +229,14 @@ class MinimalistGrammarAnnealer(object):
 
         self.logger.info("Trying to add item: " + str(new_tree))
         if str(new_tree) in [str(item) for item in hypothesis.lexicon]:
+            # self.logger.info("Item already exists - returning None")
             return None, None
 
         # Just making a copy.
         new_lexicon = hypothesis.lexicon[:]
         new_lexicon.append(new_tree)
         new_grammar = MinimalistGrammar(new_lexicon)
+        # TODO: this can cause an exception
         energy = self.energy(new_grammar, added=new_tree)
         self.logger.info("Adding item: " + str(new_tree))
         return new_grammar, energy
@@ -437,6 +444,9 @@ class MinimalistGrammarAnnealer(object):
 
     # Here I calculate the theoretical length of the grammar and the input.
     def energy(self, hypothesis, deleted=None, added=None, flipped_word=None, log=True):
+        if hypothesis is None:
+            self.logger.info(f"energy(): hypothesis is None!")
+        # TODO: can cause an exception when can't parse the input - maybe give some score for partial parsing!!!
         parsing_results = self.get_parsing_results(hypothesis, deleted=deleted, added=added, flipped_word=flipped_word)
         # The members of the grammar that took part in the parsing of some sentence.
         set_sum = lambda x, y: x | y

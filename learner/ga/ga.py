@@ -14,7 +14,7 @@ ExtraArgType = TypeVar("ExtraArgType")
 GenomeType = Tuple[IndividualType, float]
 GenerateIndividualType = Callable[[], GenomeType]
 FitnessFunctionType = Callable[[IndividualType, Optional[ExtraArgType]], float]
-MutateFunctionType = Callable[[IndividualType, Optional[ExtraArgType]], IndividualType]
+MutateFunctionType = Callable[[IndividualType, Optional[ExtraArgType]], GenomeType]
 # Crossover should take two parents and an optional extra argument and return two children
 CrossoverFunctionType = Callable[
     [IndividualType, IndividualType, Optional[ExtraArgType]],
@@ -78,17 +78,18 @@ class GeneticAlgorithm(Generic[IndividualType, ExtraArgType]):
         new_population = elites[:]
 
         # TODO: no penalty?
+        # TODO: support partial parsing, do not disqualify the whole grammar
         # TODO: no caching for fitness score?
 
         while len(new_population) < self.population_size:
             parent1, _ = random.choice(selected)
             parent2, _ = random.choice(selected)
             child1, child2 = self.crossover(parent1, parent2, self.extra_arg)
-            child1 = self.mutate(child1, self.extra_arg)
-            child2 = self.mutate(child2, self.extra_arg)
-            new_population.append((child1, self.evaluate_fitness(child1, self.extra_arg)))
+            child1, fitness1 = self.mutate(child1, self.extra_arg)
+            child2, fitness2 = self.mutate(child2, self.extra_arg)
+            new_population.append((child1, fitness1))
             if len(new_population) < self.population_size:
-                new_population.append((child2, self.evaluate_fitness(child2, self.extra_arg)))
+                new_population.append((child2, fitness2))
         self.population = new_population
 
     def run(self):
