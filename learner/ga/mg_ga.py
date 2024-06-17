@@ -3,7 +3,7 @@ from copy import deepcopy
 from typing import Tuple, Optional
 
 from minimalist_grammar.MinimalistGrammar import *
-from learner import MinimalistGrammarAnnealer
+from learner.MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
 
 ADD_CHAR_PROB = 0.02
 REMOVE_CHAR_PROB = 0.02
@@ -20,16 +20,20 @@ class MGGA(object):
         if self.indi is not (None, 0):
             return deepcopy(self.indi)
 
+        # TODO: currently always returns the same initial hypothesis (not random generation)
         genotype = self.mga.get_initial_hypothesis()
         fitness = self.evaluate_fitness_grammar(genotype, None)
         self.indi = (genotype, fitness)
         return genotype, fitness
 
     def evaluate_fitness_grammar(self, genotype: MinimalistGrammar, target: Optional[str]) -> float:
-        fitness = self.mga.energy(genotype)
-        if not self.init:
-            self.mga.initial_input_parsing_dict = self.mga.new_parsing_dict
-            self.init = True
+        try:
+            fitness = self.mga.energy(genotype)
+        except Exception as e:
+            self.logger.info(f"evaluate_fitness_grammar(): energy error {e}")
+            return float('inf')
+
+        self.mga.initial_input_parsing_dict = self.mga.new_parsing_dict
         return fitness
 
     def mutate_grammar(self, genotype: MinimalistGrammar, target: Optional[str]) -> MinimalistGrammar:

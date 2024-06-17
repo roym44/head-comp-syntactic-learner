@@ -34,6 +34,7 @@ class GeneticAlgorithm(Generic[IndividualType, ExtraArgType]):
             population_size: int = 1000,
             max_generations: int = 1000,
             early_stop_generations: int = 100,
+            tournament_size: int = 5,
             extra_arg: Optional[ExtraArgType] = None,
     ):
         if generate_individual is None and initial_population is None:
@@ -50,6 +51,7 @@ class GeneticAlgorithm(Generic[IndividualType, ExtraArgType]):
         self.population_size = population_size
         self.max_generations = max_generations
         self.early_stop_generations = early_stop_generations
+        self.tournament_size = tournament_size
         self.extra_arg = extra_arg
         self.fitness_history: List[float] = []
         self.best_fitness_stagnant_counter = 0
@@ -72,11 +74,11 @@ class GeneticAlgorithm(Generic[IndividualType, ExtraArgType]):
     def evolve(self, elite_size: int = 1) -> None:
         sorted_population = sorted(self.population, key=lambda individual: individual[1])
         elites = sorted_population[:elite_size]
-        selected = self.selection(sorted_population[elite_size:])
+        selected = self.selection(sorted_population[elite_size:], self.tournament_size)
         new_population = elites[:]
 
         # TODO: no penalty?
-        # TODO: no cahcing for fitness score?
+        # TODO: no caching for fitness score?
 
         while len(new_population) < self.population_size:
             parent1, _ = random.choice(selected)

@@ -77,7 +77,7 @@ class Experiment(object):
         return sal.hypothesis
 
     def learn_ga(self, initial_input, learner_type):
-        mga = MinimalistGrammarAnnealer.MinimalistGrammarAnnealer(logger, initial_input, self.blank_grammar, learner_type)
+        mga = MinimalistGrammarAnnealer(logger, initial_input, self.blank_grammar, learner_type)
         mg_ga = MGGA(mga)
         gal = GeneticAlgorithm(
             logger,
@@ -85,7 +85,10 @@ class Experiment(object):
             mg_ga.mutate_grammar,
             mg_ga.crossover_grammar,
             generate_individual=mg_ga.generate_individual_grammar,
-            population_size=6
+            population_size=5,
+            max_generations=1000,
+            early_stop_generations=50,
+            tournament_size=2,
         )
         best_individual, best_fitness = gal.run()
         logger.info(f"Best individual: {best_individual}, fitness: {best_fitness}")
