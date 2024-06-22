@@ -29,6 +29,7 @@ class MGGA(object):
         return fitness
 
     def mutate_grammar(self, genotype: MinimalistGrammar, target: Optional[MinimalistGrammar]) -> GenomeType:
+        # TODO: use a mutation rate
         new_hypothesis, new_energy = self.mga.random_neighbour(genotype)
         if new_hypothesis is None:
             new_hypothesis = genotype
@@ -37,4 +38,5 @@ class MGGA(object):
         return new_hypothesis, new_energy
     def crossover_grammar(self, parent1: MinimalistGrammar, parent2: MinimalistGrammar,
                           target: Optional[MinimalistGrammar]) -> Tuple[MinimalistGrammar, MinimalistGrammar]:
+        # TODO: implement crossover
         return parent1, parent2
