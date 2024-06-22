@@ -294,7 +294,7 @@ class NumberMinimalistGrammarTree(object):
     # TODO: is this good enough? I had to implement it because in python3.11 there's no default hash
     # str(self) can crash with Word Learner for some reason (self.nodes is empty)
     def __hash__(self):
-        return hash(str(self))
+        return hash(str(self)) if hasattr(self, "nodes") else hash(id(self))
 
 def test_actions():
     print("\nMerge-1")

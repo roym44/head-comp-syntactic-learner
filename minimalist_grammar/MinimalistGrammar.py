@@ -37,6 +37,9 @@ class MinimalistGrammar(object):
     def __ne__(self, other):
         return not (self == other)
 
+    def get_sorted_lexicon(self):
+        return sorted(self.lexicon, key=cmp_to_key(compare_for_susbtrings))
+
 
 def get_grammar_from_string(grammar_string):
     tree_strings = grammar_string.strip()[1:-1].split(', [')

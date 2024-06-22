@@ -342,7 +342,7 @@ class MinimalistGrammarAnnealer(object):
                 if item.nodes[0].substring != EMPTY_STRING and len(
                         item.head.selects) < 2 and item.complement_merge_direction != current_direction:
                     raise AnnealerException("Unexpected merge direction - expected: %s, found: %s" % (
-                    current_direction, item.complement_merge_direction))
+                        current_direction, item.complement_merge_direction))
 
             new_tree = self.flip_item_direction(item)
 
@@ -375,7 +375,7 @@ class MinimalistGrammarAnnealer(object):
             new_direction = "right"
         else:
             raise AnnealerException("Invalid merge direction in hypothesis - category: %s, direction: %s" % (
-            category_to_flip, current_direction))
+                category_to_flip, current_direction))
 
         for item in hypothesis.lexicon:
 
@@ -502,7 +502,7 @@ class MinimalistGrammarAnnealer(object):
 
             if time.time() - self.last_print_time > 10:
                 print("Parsed %d sentences - (%s seconds since last update)" % (
-                i + 1, time.time() - self.last_print_time))
+                    i + 1, time.time() - self.last_print_time))
                 self.last_print_time = time.time()
 
         return parsing_results

@@ -43,8 +43,8 @@ class SimulatedAnnealingLearner(object):
                 if random.random() < p and self.hypothesis != new_hypothesis:
                     self.hypothesis = new_hypothesis
                     self.current_energy = new_energy
+                    # TODO: this is really annoying and unexpected - why do I need to change it externally?
                     self.annealer.initial_input_parsing_dict = self.annealer.new_parsing_dict
-                    # TODO: seems like its misleading sometimes - could it be that the hyp doesn't change?
                     self.logger.info("Changed hypotheses.")
                 else:
                     self.logger.info("Didn't change hypotheses.")

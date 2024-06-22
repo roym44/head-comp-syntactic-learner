@@ -10,14 +10,19 @@ ALL_CONFIGS = { l : THEORIES for l in LEARNERS}
 # general
 LOGS_FOLDER = os.path.join("output", "logs")
 
-if __name__ == '__main__':
-    # with coordination (including "and")
-    # exp = Experiment(LOGS_FOLDER, KAYNE_GRAMMAR_WITH_EMPTY_DP, "SA")
-    # exp.test_learner("Kayne", "Head-initial", pp=True, cp=True, coordination=True)
-
+def basic_exp():
     # no coordination
     exp = Experiment(LOGS_FOLDER, KAYNE_GRAMMAR_WITH_EMPTY_DP_NO_CO)
-    exp.test_learner("Kayne", "Head-initial", cp=True, algorithms=["SA"], input_size=100)
+    exp.test_learner("Kayne", "Head-initial", algorithms=["GA"], target_grammar=GRAMMAR_TARGET_HI)
+    # exp.test_learner("Kayne", "Head-final", algorithms=["SA", "GA"])
+    # exp.sanity_test(ALL_CONFIGS)
 
-    # exp.test_learner("Kayne", "Head-final", pp=True, cp=True, coordination=False)
-    # exp.sanity_test(ALL_CONFIGS, pp=True, cp=True, coordination=False)
+def coord_exp():
+    # with coordination (including "and")
+    exp = Experiment(LOGS_FOLDER, KAYNE_GRAMMAR_WITH_EMPTY_DP)
+    exp.test_learner("Kayne", "Head-initial", coordination=True, algorithms=["SA", "GA"])
+    # exp.sanity_test(ALL_CONFIGS, coordination=True)
+
+if __name__ == '__main__':
+    basic_exp()
+    # coord_exp()
