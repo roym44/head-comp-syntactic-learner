@@ -1,3 +1,4 @@
+import random
 from typing import Tuple, Optional
 from minimalist_grammar.MinimalistGrammar import *
 from learner.MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
@@ -28,8 +29,10 @@ class MGGA(object):
         self.mga.initial_input_parsing_dict = self.mga.new_parsing_dict
         return fitness
 
-    def mutate_grammar(self, genotype: MinimalistGrammar, target: Optional[MinimalistGrammar]) -> GenomeType:
-        # TODO: use a mutation rate
+    def mutate_grammar(self, genotype: MinimalistGrammar, target: Optional[MinimalistGrammar], mutation_rate=0.9) -> GenomeType:
+        if random.random() > mutation_rate:
+            return genotype, self.evaluate_fitness_grammar(genotype, target)
+
         new_hypothesis, new_energy = self.mga.random_neighbour(genotype)
         if new_hypothesis is None:
             new_hypothesis = genotype
