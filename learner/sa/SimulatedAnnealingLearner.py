@@ -29,6 +29,7 @@ class SimulatedAnnealingLearner(object):
             self.logger.info(f"Energy: {self.current_energy}")
             self.logger.info(f"Temperature: {self.temperature}")
 
+            # TODO: this note is important and should be kept also in the GA to compare them properly!
             # I made the neighbour function also calculate the energy to save time.
             new_hypothesis, new_energy = self.annealer.random_neighbour(self.hypothesis)
             if new_hypothesis is not None:

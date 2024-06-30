@@ -463,6 +463,7 @@ class MinimalistGrammarAnnealer(object):
 
         return grammar_length + input_length
 
+    # the flags are used to avoid parsing the same sentence multiple times and help running time (also in energy calc)
     def get_parsing_results(self, hypothesis, deleted=None, added=None, flipped_word=None):
         self.new_parsing_dict = {}
         parsing_results = []
