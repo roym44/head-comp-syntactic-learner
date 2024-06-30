@@ -66,7 +66,8 @@ def print_parse_tree(sentence, derivation, save_to_file = True, translation_func
         file_name = time_str + sentence + ".png"
         if folder is not None:
             full_path = os.path.join(PICS_FOLDER, folder)
-            os.mkdir(full_path)
+            if not os.path.exists(full_path):
+                os.mkdir(full_path)
         else:
             full_path = PICS_FOLDER
         file_path = os.path.join(full_path, file_name)
