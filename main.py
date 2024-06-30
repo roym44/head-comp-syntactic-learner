@@ -21,8 +21,8 @@ def general_case_compare_exp():
     Pages 49 - 60 in Avraham's work, using the same input he generated.
     """
     exp = Experiment(LOGS_FOLDER, KAYNE_GRAMMAR_WITH_EMPTY_DP_NO_CO)
-    # exp.test_learner("Kayne", "Head-initial", algorithms=["SA", "GA"], target=GRAMMAR_511, initial_input=INPUT_511)
-    exp.test_learner("Kayne", "Head-final", algorithms=["SA", "GA"], target=GRAMMAR_512, initial_input=INPUT_512)
+    # exp.test_learner("Kayne", "Head-initial", algorithms=["GA"], target=GRAMMAR_511, initial_input=INPUT_511)
+    exp.test_learner("Kayne", "Head-final", algorithms=["GA"], target=GRAMMAR_512, initial_input=INPUT_512)
     # exp.test_learner("Kayne", "Mixed-category", algorithms=["SA", "GA"], target=GRAMMAR_513, initial_input=INPUT_513)
     # exp.test_learner("Kayne", "Mixed-word", algorithms=["SA", "GA"], target=GRAMMAR_514, initial_input=INPUT_514)
 
