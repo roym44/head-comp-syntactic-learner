@@ -1,6 +1,8 @@
+import os
+
 from input.BlankGrammars import *
-from learner.experiment import *
-from learner.general_case_configs import *
+from learner.experiment.experiment import Experiment
+from learner.experiment.general_case_configs import *
 
 # learner config
 LEARNERS = ("Kayne", "Language", "Category", "Word")

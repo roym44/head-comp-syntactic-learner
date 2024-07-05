@@ -4,7 +4,7 @@ from loguru import logger
 from input.InputGenerator import *
 from input.BlankGrammars import *
 from minimalist_grammar.MinimalistGrammar import get_grammar_from_string
-from learner.MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
+from learner.experiment.MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
 from learner.sa.SimulatedAnnealingLearner import SimulatedAnnealingLearner
 
 def test_annealing(input):

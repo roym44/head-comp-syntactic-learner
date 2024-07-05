@@ -1,12 +1,10 @@
 import random
 from typing import Tuple, Optional
 from minimalist_grammar.MinimalistGrammar import *
-from learner.MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
+from learner.experiment.MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
 from learner.ga.ga import GenomeType
 
-ADD_CHAR_PROB = 0.02
-REMOVE_CHAR_PROB = 0.02
-MUTATE_CHAR_PROB = 0.1
+MUTATION_RATE = 1
 
 
 class MGGA(object):
@@ -14,7 +12,7 @@ class MGGA(object):
         self.mga = mg_annealer
 
     def generate_individual_grammar(self) -> GenomeType:
-        # TODO: currently always returns the same initial hypothesis (not random generation)
+        # TODO: currently always returns the same initial hypothesis (consider random generation)
         genotype = self.mga.get_initial_hypothesis()
         fitness = self.evaluate_fitness_grammar(genotype, None)
         return genotype, fitness
@@ -24,12 +22,13 @@ class MGGA(object):
             fitness = self.mga.energy(genotype)
         except Exception as e:
             print(f"evaluate_fitness_grammar(): energy error {e}")
-            return float('inf') # TODO: better handling of invalid hypotheses
+            return float('inf')  # TODO: a different handling of invalid hypotheses?
 
         self.mga.initial_input_parsing_dict = self.mga.new_parsing_dict
         return fitness
 
-    def mutate_grammar(self, genotype: MinimalistGrammar, target: Optional[MinimalistGrammar], mutation_rate=0.9) -> GenomeType:
+    def mutate_grammar(self, genotype: MinimalistGrammar, target: Optional[MinimalistGrammar],
+                       mutation_rate=MUTATION_RATE) -> GenomeType:
         if random.random() > mutation_rate:
             return genotype, self.evaluate_fitness_grammar(genotype, target)
 
@@ -39,6 +38,7 @@ class MGGA(object):
             new_energy = float('inf')
         # print("mutate_grammar(): new_energy", new_energy)
         return new_hypothesis, new_energy
+
     def crossover_grammar(self, parent1: MinimalistGrammar, parent2: MinimalistGrammar,
                           target: Optional[MinimalistGrammar]) -> Tuple[MinimalistGrammar, MinimalistGrammar]:
         # TODO: implement crossover
