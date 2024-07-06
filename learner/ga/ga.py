@@ -26,9 +26,9 @@ class GeneticAlgorithm(Generic[IndividualType, ExtraArgType]):
     def __init__(
             self,
             logger,
-            fitness_function: FitnessFunctionType[IndividualType, Optional[ExtraArgType]],
-            mutate_function: MutateFunctionType[IndividualType, Optional[ExtraArgType]],
-            crossover_function: CrossoverFunctionType[IndividualType, Optional[ExtraArgType]],
+            fitness_function: FitnessFunctionType,
+            mutate_function: MutateFunctionType,
+            crossover_function: CrossoverFunctionType,
             generate_individual: Optional[GenerateIndividualType[IndividualType]] = None,
             initial_population: Optional[List[GenomeType]] = None,
             population_size: int = 1000,

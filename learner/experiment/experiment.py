@@ -8,6 +8,14 @@ from parser.NumberBottomUpParser import parse_sentence
 from minimalist_grammar import NumberMinimalistGrammarTree
 
 
+def get_target_hypothesis(initial_input, grammar, learner_type):
+    # abuses the current implementation of the MinimalistGrammarAnnealer (get_target_hypothesis)
+    mga = MinimalistGrammarAnnealer(logger, initial_input, grammar, learner_type)
+    target_hyp = mga.get_initial_hypothesis()
+    target_score = mga.energy(target_hyp)
+    return target_hyp, target_score
+
+
 class Experiment(object):
     def __init__(self, logs_folder, blank_grammar):
         self.logs_folder = logs_folder
@@ -99,15 +107,9 @@ class Experiment(object):
         gal.plot_fitness_history()
         return best_individual, best_fitness
 
-    def get_target_hypothesis(self, initial_input, grammar, learner_type):
-        # abuses the current implementation of the MinimalistGrammarAnnealer (get_target_hypothesis)
-        mga = MinimalistGrammarAnnealer(logger, initial_input, grammar, learner_type)
-        target_hyp = mga.get_initial_hypothesis()
-        target_score = mga.energy(target_hyp)
-        return target_hyp, target_score
-
     def test_learner(self, learner_type, input_type, pp=True, cp=True, coordination=False,
-                     input_size=50, temperature=100, algorithms=None, target=None, initial_input=None, print_samples=True):
+                     input_size=50, temperature=100, algorithms=None, target=None, initial_input=None,
+                     print_samples=True):
         """
         Testing a specific learner with a specific input
         Retrieves the target hypothesis and prints it in the end in order to compare.
@@ -119,7 +121,8 @@ class Experiment(object):
             # we need this apparently to draw the tree
             NumberMinimalistGrammarTree.WITH_NESTED_DERIVATION = True
 
-        target_hyp, target_score = self.get_target_hypothesis(initial_input, target, learner_type)
+        if target is not None:
+            target_hyp, target_score = get_target_hypothesis(initial_input, target, learner_type)
         for a in algorithms:
             log_file_name = self.init_log_file(learner_type, input_type, pp, cp, a)
             logger.info(f"Input is: {initial_input}")
@@ -134,15 +137,18 @@ class Experiment(object):
             else:
                 raise Exception("Unsupported algorithm")
             elapsed_time = time.time() - start_time
+
             logger.info(f"Input was: {initial_input}")
             logger.info(f"Final hypothesis: {hypothesis.get_sorted_lexicon()}, score: {score}")
-            logger.info(f"Target hypothesis: {target_hyp.get_sorted_lexicon()}, score: {target_score}, "
-                        f"difference: {score - target_score}")
+            if target is not None:
+                logger.info(f"Target hypothesis: {target_hyp.get_sorted_lexicon()}, score: {target_score}, "
+                            f"difference: {score - target_score}")
             logger.info(f"Elapsed time: {elapsed_time:.2f}s")
 
             # print the tree derivation of some sentences from the input
             if print_samples:
                 sentences = initial_input[:5]
+                print(f"Sentences for printing: {sentences}")
                 for sentence in sentences:
                     parse_sentence(hypothesis, sentence, draw_tree=True, folder=log_file_name)
 
@@ -156,7 +162,7 @@ class Experiment(object):
             for config in configs:
                 start_time = time.time()
                 self.test_learner(learner, config, pp=pp, cp=cp, coordination=coordination,
-                                                     input_size=input_size, temperature=temperature,
-                                                     algorithms=algorithms)
+                                  input_size=input_size, temperature=temperature,
+                                  algorithms=algorithms)
                 elapsed_time = time.time() - start_time
                 print(f"{config}: {elapsed_time:.2f}s")
