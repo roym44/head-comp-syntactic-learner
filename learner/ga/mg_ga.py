@@ -50,7 +50,6 @@ class MGGA(object):
 
         # determine crossover point (single-point crossover)
         crossover_point = random.randint(1, len(parent1.lexicon) - 1)
-        print(f"crossover_grammar(): crossover_point = {crossover_point}, parent1lex = {len(parent1.lexicon)}, parent2lex = {len(parent2.lexicon)}")
 
         # create offspring by combining parts of the parents
         offspring1_lexicon = parent1.lexicon[:crossover_point] + parent2.lexicon[crossover_point:]

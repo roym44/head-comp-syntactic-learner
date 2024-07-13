@@ -113,6 +113,8 @@ class Experiment(object):
         """
         Testing a specific learner with a specific input
         Retrieves the target hypothesis and prints it in the end in order to compare.
+        :param algorithms: list of algorithms to use (SA, GA)
+        :param target: the target hypothesis to compare with (if None, no comparison is made)
         """
         if initial_input is None:
             initial_input = self.generate_input(input_type, pp, cp, coordination, input_size)
