@@ -81,7 +81,7 @@ class MinimalistGrammarAnnealer(object):
         """
         return MinimalistGrammar(sorted(lexicon, key=lambda x: x.size()))
 
-    def random_neighbour(self, hypothesis : MinimalistGrammar):
+    def random_neighbour(self, hypothesis: MinimalistGrammar):
         neighbour = None
         retry_count = 0
         if len(hypothesis.lexicon) > 70:
@@ -135,14 +135,14 @@ class MinimalistGrammarAnnealer(object):
 
         return None, None
 
-    def delete(self, hypothesis : MinimalistGrammar):
+    def delete(self, hypothesis: MinimalistGrammar):
         for i in range(10):
             grammar, energy = self.delete_once(hypothesis)
             if grammar:
                 return grammar, energy
         return grammar, energy
 
-    def delete_once(self, hypothesis : MinimalistGrammar):
+    def delete_once(self, hypothesis: MinimalistGrammar):
         # Just making a copy.
         new_lexicon = hypothesis.lexicon[:]
         removed = new_lexicon.pop(random.randrange(0, len(new_lexicon)))

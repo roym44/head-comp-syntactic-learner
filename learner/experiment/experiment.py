@@ -148,11 +148,14 @@ class Experiment(object):
             logger.info(f"Elapsed time: {elapsed_time:.2f}s")
 
             # print the tree derivation of some sentences from the input
+            failed_parses = 0
             if print_samples:
-                sentences = initial_input[:5]
+                sentences = initial_input
                 print(f"Sentences for printing: {sentences}")
                 for sentence in sentences:
-                    parse_sentence(hypothesis, sentence, draw_tree=True, folder=log_file_name)
+                    if not parse_sentence(hypothesis, sentence, draw_tree=False, folder=log_file_name):
+                        failed_parses += 1
+                logger.info(f"Failed parsing {failed_parses}/{len(sentences)} input sentences")
 
     def sanity_test(self, learner_configs, pp=True, cp=True, coordination=False,
                     input_size=50, temperature=100, algorithms=None):
