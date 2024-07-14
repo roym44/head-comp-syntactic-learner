@@ -1,4 +1,5 @@
 import random
+import math
 from typing import Tuple, Optional
 from minimalist_grammar.MinimalistGrammar import *
 from learner.experiment.MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
@@ -48,12 +49,19 @@ class MGGA(object):
         if random.random() > crossover_rate:
             return parent1, parent2
 
-        # determine crossover point (single-point crossover)
-        crossover_point = random.randint(1, len(parent1.lexicon) - 1)
+        # Create offspring by unilaterally adding random rules from parent2 to parent1's lexicon
+        offspring1_lexicon = parent1.lexicon[:]
+        offspring2_lexicon = parent2.lexicon[:]
 
-        # create offspring by combining parts of the parents
-        offspring1_lexicon = parent1.lexicon[:crossover_point] + parent2.lexicon[crossover_point:]
-        offspring2_lexicon = parent2.lexicon[:crossover_point] + parent1.lexicon[crossover_point:]
+        # Unilateral lexicon crossover
+        # Determine number of rules to add from parent2 to parent1 (number between 1 and 20% of parent2's lexicon)
+        num_rules_to_add = random.randint(1, len(parent2.lexicon) // 5)  # Random number of rules to add
+
+        # Randomly select rules from parent2 and add them to parent1's lexicon if not already present
+        selected_rules = random.sample(offspring2_lexicon, num_rules_to_add)
+        for rule in selected_rules:
+            if rule not in offspring1_lexicon:
+                offspring1_lexicon.append(rule)
 
         # create new MinimalistGrammar instances for offspring
         offspring1 = MinimalistGrammar(offspring1_lexicon)
