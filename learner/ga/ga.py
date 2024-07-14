@@ -87,9 +87,14 @@ class GeneticAlgorithm(Generic[IndividualType, ExtraArgType]):
             child1, child2 = self.crossover(parent1, parent2, self.extra_arg)
             child1, fitness1 = self.mutate(child1, self.extra_arg)
             child2, fitness2 = self.mutate(child2, self.extra_arg)
-            new_population.append((child1, fitness1))
+            candidates = [(child1, fitness1), (child2, fitness2)]
+            # sort the candidates by fitness score
+            candidates.sort(key=lambda individual: individual[1])
+            # add the best child to the new population
+            new_population.append(candidates[0])
+            # add the other child if there is still room
             if len(new_population) < self.population_size:
-                new_population.append((child2, fitness2))
+                new_population.append(candidates[1])
         self.population = new_population
 
     def run(self):

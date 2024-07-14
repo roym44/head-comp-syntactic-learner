@@ -4,7 +4,7 @@ from minimalist_grammar.MinimalistGrammar import *
 from learner.experiment.MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
 from learner.ga.ga import GenomeType
 
-CROSSOVER_RATE = 0.2
+CROSSOVER_RATE = 0
 MUTATION_RATE = 0.9
 
 
@@ -37,7 +37,7 @@ class MGGA(object):
         new_hypothesis, new_energy = self.mga.random_neighbour(genotype)
         if new_hypothesis is None:
             new_hypothesis = genotype
-            new_energy = float('inf')
+            new_energy = self.evaluate_fitness_grammar(genotype, target)
         # print("mutate_grammar(): new_energy", new_energy)
         return new_hypothesis, new_energy
 

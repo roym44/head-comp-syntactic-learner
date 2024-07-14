@@ -14,6 +14,7 @@ class NumberBottomUpParser(object):
     def __init__(self, grammar):
         self.grammar = grammar
 
+    # main function for parsing, used in MinimalistGrammarAnnealer
     def parse(self, input):
         self.init_agenda(input)
         self.init_goals(input)
@@ -346,6 +347,7 @@ def parse_sentence(grammar, sentence, draw_tree=False, folder="DerivationTrees")
                              folder=folder)
 
     print("\nElapsed time:", end - start)
+    return result
 
 
 def parse_input(grammar, input):
