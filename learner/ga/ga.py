@@ -117,7 +117,7 @@ class GeneticAlgorithm(Generic[IndividualType, ExtraArgType]):
             self.evolve()
         return self.best_individual
 
-    def plot_fitness_history(self):
+    def plot_fitness_history(self, plot_path):
         sns.set(style="darkgrid")
         plt.figure(figsize=(10, 6))
         plt.plot(self.fitness_history, label="Best Fitness")
@@ -125,4 +125,7 @@ class GeneticAlgorithm(Generic[IndividualType, ExtraArgType]):
         plt.xlabel("Generation")
         plt.ylabel("Best Fitness")
         plt.legend()
+        if plot_path is not None:
+            plt.savefig(plot_path)
         plt.show()
+

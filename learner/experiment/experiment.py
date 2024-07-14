@@ -17,8 +17,9 @@ def get_target_hypothesis(initial_input, grammar, learner_type):
 
 
 class Experiment(object):
-    def __init__(self, logs_folder, blank_grammar):
+    def __init__(self, logs_folder, plots_folder, blank_grammar):
         self.logs_folder = logs_folder
+        self.plots_folder = plots_folder
         self.blank_grammar = blank_grammar
         # logger.remove() # remove stdout logger
         self.current_sink = None
@@ -88,7 +89,7 @@ class Experiment(object):
             previous_hypothesis = sal.hypothesis
         return sal.hypothesis, sal.current_energy
 
-    def learn_ga(self, initial_input, learner_type):
+    def learn_ga(self, initial_input, learner_type, plot_path=None):
         mga = MinimalistGrammarAnnealer(logger, initial_input, self.blank_grammar, learner_type)
         mg_ga = MGGA(mga)
         gal = GeneticAlgorithm(
@@ -104,12 +105,12 @@ class Experiment(object):
         )
         best_individual, best_fitness = gal.run()
         logger.info(f"Best individual: {best_individual}, fitness: {best_fitness}")
-        gal.plot_fitness_history()
+        gal.plot_fitness_history(plot_path)
         return best_individual, best_fitness
 
     def test_learner(self, learner_type, input_type, pp=True, cp=True, coordination=False,
                      input_size=50, temperature=100, algorithms=None, target=None, initial_input=None,
-                     print_samples=True):
+                     draw_tree=False):
         """
         Testing a specific learner with a specific input
         Retrieves the target hypothesis and prints it in the end in order to compare.
@@ -119,7 +120,7 @@ class Experiment(object):
         if initial_input is None:
             initial_input = self.generate_input(input_type, pp, cp, coordination, input_size)
 
-        if print_samples:
+        if draw_tree:
             # we need this apparently to draw the tree
             NumberMinimalistGrammarTree.WITH_NESTED_DERIVATION = True
 
@@ -135,7 +136,9 @@ class Experiment(object):
             if a == "SA":
                 hypothesis, score = self.learn_sa(initial_input, learner_type, temperature)
             elif a == "GA":
-                hypothesis, score = self.learn_ga(initial_input, learner_type)
+                plot_path = log_file_name.split(".")[0] + ".png"
+                plot_path = os.path.join(self.plots_folder, plot_path)
+                hypothesis, score = self.learn_ga(initial_input, learner_type, plot_path=plot_path)
             else:
                 raise Exception("Unsupported algorithm")
             elapsed_time = time.time() - start_time
@@ -149,13 +152,12 @@ class Experiment(object):
 
             # print the tree derivation of some sentences from the input
             failed_parses = 0
-            if print_samples:
-                sentences = initial_input
-                print(f"Sentences for printing: {sentences}")
-                for sentence in sentences:
-                    if not parse_sentence(hypothesis, sentence, draw_tree=False, folder=log_file_name):
-                        failed_parses += 1
-                logger.info(f"Failed parsing {failed_parses}/{len(sentences)} input sentences")
+            sentences = initial_input
+            print(f"Sentences for printing: {sentences}")
+            for sentence in sentences:
+                if not parse_sentence(hypothesis, sentence, draw_tree=draw_tree, folder=log_file_name):
+                    failed_parses += 1
+            logger.info(f"Failed parsing {failed_parses}/{len(sentences)} input sentences")
 
     def sanity_test(self, learner_configs, pp=True, cp=True, coordination=False,
                     input_size=50, temperature=100, algorithms=None):
