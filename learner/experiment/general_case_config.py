@@ -37,8 +37,26 @@ def get_input_from_log(log_path):
         lexicon = f.readline().split(": ")
         return ast.literal_eval(lexicon[2])
 
-# Kayne learner
+# Kayne learner - HI, HF, MC, MW
 INPUT_511 = get_input_from_log("output/logs/General Case/01 - log_2017_05_10__02_40_42 - Kayne, Head-initial, PP & CP.txt")
 INPUT_512 = get_input_from_log("output/logs/General Case/02 - log_2017_05_10__02_57_53 - Kayne, Head-final, PP & CP.txt")
 INPUT_513 = get_input_from_log("output/logs/General Case/03 - log_2017_05_10__03_54_20 - Kayne, Mixed-category, PP & CP.txt")
 INPUT_514 = get_input_from_log("output/logs/General Case/04 - log_2017_05_10__06_09_15 - Kayne, Mixed-word, PP & CP.txt")
+
+# Language learner - HI, HF, MC, MW
+INPUT_521 = get_input_from_log("output/logs/General Case/05 - log_2017_05_10__06_51_45 - Language, Head-initial, PP & CP.txt")
+INPUT_522 = get_input_from_log("output/logs/General Case/06 - log_2017_05_10__13_38_44 - Language, Head-final, PP & CP.txt")
+INPUT_523 = get_input_from_log("output/logs/General Case/07 - log_2017_05_10__14_45_15 - Language, Mixed-category, PP & CP.txt")
+INPUT_524 = get_input_from_log("output/logs/General Case/08 - log_2017_05_10__20_19_58 - Language, Mixed-word, PP & CP.txt")
+
+# Category learner - HI, HF, MC, MW
+INPUT_531 = get_input_from_log("output/logs/General Case/09 - log_2017_05_10__21_17_43 - Category, Head-initial, PP & CP.txt")
+INPUT_532 = get_input_from_log("output/logs/General Case/10 - log_2017_05_10__21_43_43 - Category, Head-final, PP & CP.txt")
+INPUT_533 = get_input_from_log("output/logs/General Case/11 - log_2017_05_11__10_30_47 - Category, Mixed-category, PP & CP.txt")
+INPUT_534 = get_input_from_log("output/logs/General Case/12 - log_2017_05_12__10_47_11 - Category, Mixed-word, PP & CP.txt")
+
+# Word learner - HI, HF, MC, MW
+INPUT_541 = get_input_from_log("output/logs/General Case/13 - log_2017_05_13__18_57_05 - Word, Head-initial, PP & CP.txt")
+INPUT_542 = get_input_from_log("output/logs/General Case/14 - log_2017_05_12__18_11_05 - Word, Head-final, PP & CP.txt")
+INPUT_543 = get_input_from_log("output/logs/General Case/15 - log_2017_05_10__19_25_25 - Word, Mixed-category, PP & CP.txt")
+INPUT_544 = get_input_from_log("output/logs/General Case/16 - log_2017_05_13__02_56_34 - Word, Mixed-word, PP & CP.txt")
