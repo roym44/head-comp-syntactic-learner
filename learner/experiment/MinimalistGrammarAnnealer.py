@@ -17,7 +17,7 @@ class AnnealerException(Exception):
 
 class MinimalistGrammarAnnealer(object):
 
-    def __init__(self, logger, initial_input, blank_grammar, learner_type, separator=SUBSTRING_DELIMITER):
+    def __init__(self, logger, initial_input, blank_grammar, learner_type, algorithm, separator=SUBSTRING_DELIMITER):
         self.words = None
         self.neighbour_functions = None
         self.logger = logger
@@ -27,6 +27,7 @@ class MinimalistGrammarAnnealer(object):
         self.category = 1
         self.blank_grammar = blank_grammar
         self.learner_type = learner_type
+        self.algorithm = algorithm
         self.set_learner_type()
         self.split_to_words()
 
@@ -455,7 +456,12 @@ class MinimalistGrammarAnnealer(object):
         if hypothesis is None:
             self.logger.info(f"energy(): hypothesis is None!")
         # TODO: can cause an exception when can't parse the input - maybe give some score for partial parsing!!!
-        parsing_results = self.get_parsing_results(hypothesis, deleted=deleted, added=added, flipped_word=flipped_word)
+        # using a new version for GA without all the flags - naively running on all input
+        if self.algorithm == "GA":
+            parsing_results = self.get_parsing_results_ga(hypothesis)
+        else:
+            parsing_results = self.get_parsing_results(hypothesis, deleted=deleted, added=added,
+                                                       flipped_word=flipped_word)
         # The members of the grammar that took part in the parsing of some sentence.
         set_sum = lambda x, y: x | y
         parsing_grammar = hypothesis
@@ -471,6 +477,17 @@ class MinimalistGrammarAnnealer(object):
 
         return grammar_length + input_length
 
+    def get_parsing_results_ga(self, hypothesis):
+        parsing_results = []
+        for i, sentence in enumerate(self.initial_input):
+            parser = NumberBottomUpParser(hypothesis)
+            result = parser.parse(sentence)
+            if not result:
+                raise AnnealerException("Current hypothesis doesn't parse input! Failed on \"%s\"" % (sentence,))
+            results = parser.results
+            parsing_results.append(results)
+        return parsing_results
+
     # the flags are used to avoid parsing the same sentence multiple times and help running time (also in energy calc)
     def get_parsing_results(self, hypothesis, deleted=None, added=None, flipped_word=None):
         self.new_parsing_dict = {}
@@ -483,7 +500,7 @@ class MinimalistGrammarAnnealer(object):
             # TODO: here is a new test to see wtf is up with this logic, counting failed parses
             parser = NumberBottomUpParser(hypothesis)
             result = parser.parse(sentence)
-            failed = False # reset to False
+            failed = False  # reset to False
             if not result:
                 self.logger.warning(f"get_parsing_results(): Failed parsing test {i}: {sentence}")
                 failed = True
@@ -499,8 +516,6 @@ class MinimalistGrammarAnnealer(object):
                     # TODO: we continue even though we actually fail parsing!!! that's bad!
                     if failed:
                         self.logger.warning(f"get_parsing_results(): shouldn't continue deleted on {i} : {deleted}")
-                    else:
-                        self.logger.info(f"get_parsing_results(): continue deleted on {i} : {deleted}")
                     continue
 
             # If the added item isn't a word in the sentence then we don't need to parse again.
@@ -509,17 +524,14 @@ class MinimalistGrammarAnnealer(object):
                 self.new_parsing_dict[sentence] = self.initial_input_parsing_dict[sentence]
                 if failed:
                     self.logger.warning(f"get_parsing_results(): shouldn't continue added on {i} : {added}")
-                else:
-                    self.logger.info(f"get_parsing_results(): continue added on {i} : {added}")
                 continue
 
             if flipped_word is not None and flipped_word not in sentence.split():
                 parsing_results.append(self.initial_input_parsing_dict[sentence])
                 self.new_parsing_dict[sentence] = self.initial_input_parsing_dict[sentence]
                 if failed:
-                    self.logger.warning(f"get_parsing_results(): shouldn't continue flipped_word on {i} : {flipped_word}")
-                else:
-                    self.logger.info(f"get_parsing_results(): continue flipped_word on {i} : {flipped_word}")
+                    self.logger.warning(
+                        f"get_parsing_results(): shouldn't continue flipped_word on {i} : {flipped_word}")
                 continue
 
             result = parser.parse(sentence)

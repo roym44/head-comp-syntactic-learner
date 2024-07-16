@@ -9,6 +9,8 @@ class MinimalistGrammar(object):
         self.bases = None
         self.substrings = None
         self.lexicon = lexicon
+        # TODO: new parameter, consider removing
+        self.failed_parsing = 0
         self.get_features()
 
     def get_features(self):

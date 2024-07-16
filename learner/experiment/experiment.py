@@ -78,7 +78,7 @@ class Experiment(object):
         return text_input
 
     def learn_sa(self, initial_input, learner_type, temperature):
-        mga = MinimalistGrammarAnnealer(logger, initial_input, self.blank_grammar, learner_type)
+        mga = MinimalistGrammarAnnealer(logger, initial_input, self.blank_grammar, learner_type, "SA")
         logger.info("Initial Temperature: %f" % (temperature,))
         sal = SimulatedAnnealingLearner(logger, mga, temperature)
         previous_hypothesis = sal.hypothesis
@@ -90,7 +90,7 @@ class Experiment(object):
         return sal.hypothesis, sal.current_energy
 
     def learn_ga(self, initial_input, learner_type, plot_path=None):
-        mga = MinimalistGrammarAnnealer(logger, initial_input, self.blank_grammar, learner_type)
+        mga = MinimalistGrammarAnnealer(logger, initial_input, self.blank_grammar, learner_type, "GA")
         mg_ga = MGGA(logger, mga)
         gal = GeneticAlgorithm(
             logger,

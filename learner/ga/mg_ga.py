@@ -6,7 +6,7 @@ from learner.experiment.MinimalistGrammarAnnealer import MinimalistGrammarAnneal
 from learner.ga.ga import GenomeType
 
 CROSSOVER_RATE = 0
-MUTATION_RATE = 0.8
+MUTATION_RATE = 0.9
 
 """
 Note: this object is wrapping an annealer, while in fact it is used in the GA for multiple MGs (population).
@@ -36,7 +36,7 @@ class MGGA(object):
     def evaluate_fitness_grammar(self, genotype: MinimalistGrammar, target: Optional) -> float:
         try:
             fitness = self.mga.energy(genotype)
-            self.mga.initial_input_parsing_dict = self.mga.new_parsing_dict
+            # self.mga.initial_input_parsing_dict = self.mga.new_parsing_dict
         except Exception as e:
             self.logger.error(f"evaluate_fitness_grammar(): energy error = {e}")
             fitness = float('inf')  # TODO: a different handling of invalid hypotheses?
@@ -57,7 +57,7 @@ class MGGA(object):
             self.logger.info("mutate_grammar(): new_hypothesis from random neighbour is None")
             return genotype, previous_fitness
 
-        self.mga.initial_input_parsing_dict = self.mga.new_parsing_dict
+        # self.mga.initial_input_parsing_dict = self.mga.new_parsing_dict
         self.logger.info("mutate_grammar(): returning new_hypothesis, new_energy")
         return new_hypothesis, new_energy
 
