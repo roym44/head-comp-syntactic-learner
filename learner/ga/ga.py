@@ -100,7 +100,7 @@ class GeneticAlgorithm(Generic[IndividualType, ExtraArgType]):
     def run(self):
         for generation in range(self.max_generations):
             for i, (grammar, fitness) in enumerate(self.population):
-                self.logger.info(f"Individual {i} : {grammar}")
+                self.logger.info(f"Individual {i} : Fitness = {fitness}")
 
             best_individual = min(self.population, key=lambda individual: individual[1])
             self.fitness_history.append(best_individual[1])

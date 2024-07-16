@@ -104,7 +104,7 @@ class MinimalistGrammarAnnealer(object):
             try:
                 neighbour, energy = option(hypothesis)
             except Exception as e:
-                self.logger.info(f"random_neighbour(): Exception {e}")
+                self.logger.error(f"random_neighbour(): Exception {e}")
             retry_count += 1
         if retry_count == 10:
             self.logger.info("Couldn't find better hypothesis.")
@@ -155,10 +155,8 @@ class MinimalistGrammarAnnealer(object):
         new_grammar = MinimalistGrammar(new_lexicon)
         try:
             energy = self.energy(new_grammar, deleted=removed)
-        except KeyboardInterrupt as e:
-            raise e
         except Exception as e:
-            self.logger.info(f"delete_once(): Exception {e}")
+            self.logger.error(f"delete_once(): Exception {e}")
             return None, None
         self.logger.info("Deleting: " + str(removed))
         return new_grammar, energy
@@ -229,15 +227,18 @@ class MinimalistGrammarAnnealer(object):
 
         self.logger.info("Trying to add item: " + str(new_tree))
         if str(new_tree) in [str(item) for item in hypothesis.lexicon]:
-            # self.logger.info("Item already exists - returning None")
+            self.logger.info("Item already exists - returning None")
             return None, None
 
         # Just making a copy.
         new_lexicon = hypothesis.lexicon[:]
         new_lexicon.append(new_tree)
         new_grammar = MinimalistGrammar(new_lexicon)
-        # TODO: this can cause an exception
-        energy = self.energy(new_grammar, added=new_tree)
+        try:
+            energy = self.energy(new_grammar, added=new_tree)
+        except Exception as e:
+            self.logger.error(f"add_lexical_item_once(): Exception {e}")
+            return None, None
         self.logger.info("Adding item: " + str(new_tree))
         return new_grammar, energy
 
@@ -296,7 +297,8 @@ class MinimalistGrammarAnnealer(object):
                 new_tree.type = TYPE_COMPLEX
             else:  # Otherwise - [word: DP]s or [@: IP =DP =VP]
                 pass
-        elif self.blank_grammar == BlankGrammars.KAYNE_GRAMMAR_WITH_EMPTY_DP:
+        elif self.blank_grammar == BlankGrammars.KAYNE_GRAMMAR_WITH_EMPTY_DP or \
+                self.blank_grammar == BlankGrammars.KAYNE_GRAMMAR_WITH_EMPTY_DP_NO_CO:
             category_flip_dict = {"CP =IP]s": "CP =IP +Comp -Oc]s",
                                   "VP =DP]s": "VP =DP +O]s",
                                   "VP =CP]s": "VP =CP +Oc]s",

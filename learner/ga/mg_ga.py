@@ -8,7 +8,15 @@ from learner.ga.ga import GenomeType
 CROSSOVER_RATE = 0
 MUTATION_RATE = 0.9
 
-
+"""
+Note: this object is wrapping an annealer, while in fact it is used in the GA for multiple MGs (population).
+This can cause some weird behaviour, I tried an alternative implementation of a MGGAs population instead,
+but not in the current version if the project.
+    - I saw that the fitness is not well balanced in the population, individual 0 had the best fitness value,
+    while the rest had a value with a difference of more that ~500 that didn't go down
+That is why we can't save a field of 'fitness' for example, because this class is not linked directly
+to a specific MG, but the annealing process of several of them.
+"""
 class MGGA(object):
     def __init__(self, mg_annealer: MinimalistGrammarAnnealer):
         self.mga = mg_annealer
@@ -25,7 +33,7 @@ class MGGA(object):
             self.mga.initial_input_parsing_dict = self.mga.new_parsing_dict
         except Exception as e:
             print(f"evaluate_fitness_grammar(): energy error {e}")
-            return float('inf')  # TODO: a different handling of invalid hypotheses?
+            fitness = float('inf')  # TODO: a different handling of invalid hypotheses?
         return fitness
 
     def mutate_grammar(self, genotype: MinimalistGrammar, target: Optional[MinimalistGrammar],
@@ -39,7 +47,7 @@ class MGGA(object):
         if new_hypothesis is None:
             return genotype, self.evaluate_fitness_grammar(genotype, target)
 
-        # self.mga.initial_input_parsing_dict = self.mga.new_parsing_dict
+        self.mga.initial_input_parsing_dict = self.mga.new_parsing_dict
         return new_hypothesis, new_energy
 
     def crossover_grammar(self, parent1: MinimalistGrammar, parent2: MinimalistGrammar,
