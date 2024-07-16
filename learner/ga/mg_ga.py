@@ -22,11 +22,10 @@ class MGGA(object):
     def evaluate_fitness_grammar(self, genotype: MinimalistGrammar, target: Optional[MinimalistGrammar]) -> float:
         try:
             fitness = self.mga.energy(genotype)
+            self.mga.initial_input_parsing_dict = self.mga.new_parsing_dict
         except Exception as e:
             print(f"evaluate_fitness_grammar(): energy error {e}")
             return float('inf')  # TODO: a different handling of invalid hypotheses?
-
-        self.mga.initial_input_parsing_dict = self.mga.new_parsing_dict
         return fitness
 
     def mutate_grammar(self, genotype: MinimalistGrammar, target: Optional[MinimalistGrammar],
@@ -36,10 +35,11 @@ class MGGA(object):
             return genotype, self.evaluate_fitness_grammar(genotype, target)
 
         new_hypothesis, new_energy = self.mga.random_neighbour(genotype)
+        # hypothesis is invalid, in which case we return the original genotype
         if new_hypothesis is None:
-            new_hypothesis = genotype
-            new_energy = self.evaluate_fitness_grammar(genotype, target)
-        # print("mutate_grammar(): new_energy", new_energy)
+            return genotype, self.evaluate_fitness_grammar(genotype, target)
+
+        # self.mga.initial_input_parsing_dict = self.mga.new_parsing_dict
         return new_hypothesis, new_energy
 
     def crossover_grammar(self, parent1: MinimalistGrammar, parent2: MinimalistGrammar,

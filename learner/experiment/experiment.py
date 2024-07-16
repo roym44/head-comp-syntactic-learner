@@ -100,7 +100,7 @@ class Experiment(object):
             generate_individual=mg_ga.generate_individual_grammar,
             population_size=5,
             max_generations=1000,
-            early_stop_generations=40,
+            early_stop_generations=50,
             tournament_size=2,
         )
         best_individual, best_fitness = gal.run()
