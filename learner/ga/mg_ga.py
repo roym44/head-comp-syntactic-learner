@@ -21,6 +21,8 @@ but not in the current version if the project.
 That is why we can't save a field of 'fitness' for example, because this class is not linked directly
 to a specific MG, but the annealing process of several of them.
 """
+
+
 class MGGA(object):
     def __init__(self, logger, mg_annealer: MinimalistGrammarAnnealer):
         self.logger = logger
@@ -35,6 +37,8 @@ class MGGA(object):
 
     def evaluate_fitness_grammar(self, genotype: MinimalistGrammar, target: Optional) -> float:
         try:
+            # first time it's okay if genotype.parsing_dict is empty, the flags when calling
+            # get_parsing_results_ga() will be False also
             fitness = self.mga.energy(genotype)
             # self.mga.initial_input_parsing_dict = self.mga.new_parsing_dict
         except Exception as e:
@@ -57,6 +61,7 @@ class MGGA(object):
             self.logger.info("mutate_grammar(): new_hypothesis from random neighbour is None")
             return genotype, previous_fitness
 
+        # new_hypothesis.parsing_dict = genotype.parsing_dict.copy()
         # self.mga.initial_input_parsing_dict = self.mga.new_parsing_dict
         self.logger.info("mutate_grammar(): returning new_hypothesis, new_energy")
         return new_hypothesis, new_energy
@@ -64,7 +69,7 @@ class MGGA(object):
     def crossover_grammar(self, parent1: MinimalistGrammar, parent2: MinimalistGrammar,
                           target: Optional, crossover_rate=CROSSOVER_RATE) \
             -> Tuple[MinimalistGrammar, MinimalistGrammar]:
-        self.logger.info(f"crossover_grammar(): entered with parent1 = {parent1}, parent2 = {parent2}, target = {target}")
+        self.logger.info(f"crossover_grammar(): entered")
         # don't perform crossover if the probability is too low (p < 1 - crossover_rate)
         if random.random() > crossover_rate:
             return parent1, parent2

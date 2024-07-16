@@ -4,11 +4,12 @@ from minimalist_grammar import MinimalistGrammarTree
 
 class MinimalistGrammar(object):
 
-    def __init__(self, lexicon):
+    def __init__(self, lexicon, parsing_dict=None):
         self.licensors = None
         self.bases = None
         self.substrings = None
         self.lexicon = lexicon
+        self.parsing_dict = {} if parsing_dict is None else parsing_dict
         self.get_features()
 
     def get_features(self):

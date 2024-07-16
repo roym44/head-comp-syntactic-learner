@@ -1,6 +1,7 @@
 import time
 import math
 import random
+from typing import Tuple
 
 from input import BlankGrammars
 from parser.NumberBottomUpParser import NumberBottomUpParser
@@ -82,7 +83,7 @@ class MinimalistGrammarAnnealer(object):
         """
         return MinimalistGrammar(sorted(lexicon, key=lambda x: x.size()))
 
-    def random_neighbour(self, hypothesis: MinimalistGrammar):
+    def random_neighbour(self, hypothesis: MinimalistGrammar) -> Tuple[MinimalistGrammar, float]:
         self.logger.info("random_neighbour(): entered")
         neighbour = None
         retry_count = 0
@@ -156,7 +157,7 @@ class MinimalistGrammarAnnealer(object):
             self.logger.info(f"delete_once(): removed = {removed.head.substring}")
             return None, None
 
-        new_grammar = MinimalistGrammar(new_lexicon)
+        new_grammar = MinimalistGrammar(new_lexicon, parsing_dict=hypothesis.parsing_dict.copy())
         try:
             energy = self.energy(new_grammar, deleted=removed)
         except Exception as e:
@@ -237,7 +238,7 @@ class MinimalistGrammarAnnealer(object):
         # Just making a copy.
         new_lexicon = hypothesis.lexicon[:]
         new_lexicon.append(new_tree)
-        new_grammar = MinimalistGrammar(new_lexicon)
+        new_grammar = MinimalistGrammar(new_lexicon, parsing_dict=hypothesis.parsing_dict.copy())
         try:
             energy = self.energy(new_grammar, added=new_tree)
         except Exception as e:
@@ -354,7 +355,7 @@ class MinimalistGrammarAnnealer(object):
 
             new_lexicon.append(new_tree)
 
-        new_grammar = MinimalistGrammar(new_lexicon)
+        new_grammar = MinimalistGrammar(new_lexicon, parsing_dict=hypothesis.parsing_dict.copy())
         try:
             energy = self.energy(new_grammar)
         except Exception as e:
@@ -393,7 +394,7 @@ class MinimalistGrammarAnnealer(object):
 
             new_lexicon.append(new_tree)
 
-        new_grammar = MinimalistGrammar(new_lexicon)
+        new_grammar = MinimalistGrammar(new_lexicon, parsing_dict=hypothesis.parsing_dict.copy())
         try:
             energy = self.energy(new_grammar)
         except Exception as e:
@@ -441,7 +442,7 @@ class MinimalistGrammarAnnealer(object):
         if str(flipped_item) in [str(item) for item in hypothesis.lexicon]:
             return None, None
 
-        new_grammar = MinimalistGrammar(new_lexicon)
+        new_grammar = MinimalistGrammar(new_lexicon, parsing_dict=hypothesis.parsing_dict.copy())
         try:
             energy = self.energy(new_grammar, flipped_word=item_to_flip.head.substring)
         except Exception as e:
@@ -458,7 +459,8 @@ class MinimalistGrammarAnnealer(object):
         # TODO: can cause an exception when can't parse the input - maybe give some score for partial parsing!!!
         # using a new version for GA without all the flags - naively running on all input
         if self.algorithm == "GA":
-            parsing_results = self.get_parsing_results_ga(hypothesis)
+            parsing_results = self.get_parsing_results_ga(hypothesis, deleted=deleted, added=added,
+                                                       flipped_word=flipped_word)
         else:
             parsing_results = self.get_parsing_results(hypothesis, deleted=deleted, added=added,
                                                        flipped_word=flipped_word)
@@ -477,19 +479,44 @@ class MinimalistGrammarAnnealer(object):
 
         return grammar_length + input_length
 
-    def get_parsing_results_ga(self, hypothesis):
+    def get_parsing_results_ga(self, hypothesis: MinimalistGrammar, deleted=None, added=None, flipped_word=None):
+        new_parsing_dict = {}
         parsing_results = []
         for i, sentence in enumerate(self.initial_input):
+            # If the deleted item didn't take part in the derivation then we don't need to parse again.
+            if deleted is not None:
+                previous_composing_items = hypothesis.parsing_dict[sentence][0].composing_items
+                previous_composing_items_str = [str(item) for item in list(previous_composing_items)]
+                if str(deleted) not in previous_composing_items_str:
+                    parsing_results.append(hypothesis.parsing_dict[sentence])
+                    new_parsing_dict[sentence] = hypothesis.parsing_dict[sentence]
+                    continue
+
+            # If the added item isn't a word in the sentence then we don't need to parse again.
+            if added is not None and added.head.substring not in sentence.split():
+                parsing_results.append(hypothesis.parsing_dict[sentence])
+                new_parsing_dict[sentence] = hypothesis.parsing_dict[sentence]
+                continue
+
+            if flipped_word is not None and flipped_word not in sentence.split():
+                parsing_results.append(hypothesis.parsing_dict[sentence])
+                new_parsing_dict[sentence] = hypothesis.parsing_dict[sentence]
+                continue
+
             parser = NumberBottomUpParser(hypothesis)
             result = parser.parse(sentence)
             if not result:
                 raise AnnealerException("Current hypothesis doesn't parse input! Failed on \"%s\"" % (sentence,))
             results = parser.results
             parsing_results.append(results)
+            new_parsing_dict[sentence] = results
+
+        # update the parsing_dict of the hypothesis d
+        hypothesis.parsing_dict = new_parsing_dict.copy()
         return parsing_results
 
     # the flags are used to avoid parsing the same sentence multiple times and help running time (also in energy calc)
-    def get_parsing_results(self, hypothesis, deleted=None, added=None, flipped_word=None):
+    def get_parsing_results(self, hypothesis: MinimalistGrammar, deleted=None, added=None, flipped_word=None):
         self.new_parsing_dict = {}
         parsing_results = []
 
