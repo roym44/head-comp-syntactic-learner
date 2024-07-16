@@ -42,7 +42,7 @@ class MGGA(object):
             fitness = self.mga.energy(genotype)
             # self.mga.initial_input_parsing_dict = self.mga.new_parsing_dict
         except Exception as e:
-            self.logger.error(f"evaluate_fitness_grammar(): energy error = {e}")
+            self.logger.error(f"evaluate_fitness_grammar(): assigning {float('inf')}, energy error = {e}")
             fitness = float('inf')  # TODO: a different handling of invalid hypotheses?
         return fitness
 
@@ -52,7 +52,6 @@ class MGGA(object):
         # don't perform mutation if the probability is too low (p < 1 - mutation_rate)
         if random.random() > mutation_rate:
             self.logger.info("mutate_grammar(): no mutation")
-            # TODO: before, I called evaluate_fitness_grammar() here and it caused an exception (cannot parse)!
             return genotype, previous_fitness
 
         new_hypothesis, new_energy = self.mga.random_neighbour(genotype)

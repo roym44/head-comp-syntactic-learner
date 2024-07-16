@@ -511,7 +511,7 @@ class MinimalistGrammarAnnealer(object):
             parsing_results.append(results)
             new_parsing_dict[sentence] = results
 
-        # update the parsing_dict of the hypothesis d
+        # update the parsing_dict of the hypothesis
         hypothesis.parsing_dict = new_parsing_dict.copy()
         return parsing_results
 
