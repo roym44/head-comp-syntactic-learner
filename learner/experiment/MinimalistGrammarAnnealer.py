@@ -495,17 +495,7 @@ class MinimalistGrammarAnnealer(object):
 
         self.last_print_time = time.time()
 
-        failed_parsing = 0
         for i, sentence in enumerate(self.initial_input):
-            # TODO: here is a new test to see wtf is up with this logic, counting failed parses
-            parser = NumberBottomUpParser(hypothesis)
-            result = parser.parse(sentence)
-            failed = False  # reset to False
-            if not result:
-                self.logger.warning(f"get_parsing_results(): Failed parsing test {i}: {sentence}")
-                failed = True
-                failed_parsing += 1
-
             # If the deleted item didn't take part in the derivation then we don't need to parse again.
             if deleted is not None:
                 previous_composing_items = self.initial_input_parsing_dict[sentence][0].composing_items
@@ -513,30 +503,25 @@ class MinimalistGrammarAnnealer(object):
                 if str(deleted) not in previous_composing_items_str:
                     parsing_results.append(self.initial_input_parsing_dict[sentence])
                     self.new_parsing_dict[sentence] = self.initial_input_parsing_dict[sentence]
-                    # TODO: we continue even though we actually fail parsing!!! that's bad!
-                    if failed:
-                        self.logger.warning(f"get_parsing_results(): shouldn't continue deleted on {i} : {deleted}")
                     continue
 
             # If the added item isn't a word in the sentence then we don't need to parse again.
             if added is not None and added.head.substring not in sentence.split():
                 parsing_results.append(self.initial_input_parsing_dict[sentence])
                 self.new_parsing_dict[sentence] = self.initial_input_parsing_dict[sentence]
-                if failed:
-                    self.logger.warning(f"get_parsing_results(): shouldn't continue added on {i} : {added}")
                 continue
 
             if flipped_word is not None and flipped_word not in sentence.split():
                 parsing_results.append(self.initial_input_parsing_dict[sentence])
                 self.new_parsing_dict[sentence] = self.initial_input_parsing_dict[sentence]
-                if failed:
-                    self.logger.warning(
-                        f"get_parsing_results(): shouldn't continue flipped_word on {i} : {flipped_word}")
                 continue
 
+            parser = NumberBottomUpParser(hypothesis)
             result = parser.parse(sentence)
+
             if not result:
                 raise AnnealerException("Current hypothesis doesn't parse input! Failed on \"%s\"" % (sentence,))
+
             results = parser.results
             parsing_results.append(results)
             self.new_parsing_dict[sentence] = results
@@ -546,7 +531,6 @@ class MinimalistGrammarAnnealer(object):
                     i + 1, time.time() - self.last_print_time))
                 self.last_print_time = time.time()
 
-        hypothesis.failed_parsing = failed_parsing
         return parsing_results
 
     def ceil_log_base_2(self, number):
