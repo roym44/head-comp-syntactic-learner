@@ -82,11 +82,13 @@ class GeneticAlgorithm(Generic[IndividualType, ExtraArgType]):
         # TODO: no caching for fitness score?
 
         while len(new_population) < self.population_size:
-            parent1, _ = random.choice(selected)
-            parent2, _ = random.choice(selected)
-            child1, child2 = self.crossover(parent1, parent2, self.extra_arg)
-            child1, fitness1 = self.mutate(child1, self.extra_arg)
-            child2, fitness2 = self.mutate(child2, self.extra_arg)
+            parent1, parent1_fitness = random.choice(selected)
+            parent2, parent2_fitness = random.choice(selected)
+            # ! when crossover_rate = 0, practically we get child1, child2 = parent1, parent2
+            child1, child2 = self.crossover(parent1, parent2, None)
+            # -> therefore, we can "abuse" the optional parameter for the previous fitness value!
+            child1, fitness1 = self.mutate(child1, parent1_fitness)
+            child2, fitness2 = self.mutate(child2, parent2_fitness)
             candidates = [(child1, fitness1), (child2, fitness2)]
             # sort the candidates by fitness score
             candidates.sort(key=lambda individual: individual[1])
@@ -99,8 +101,8 @@ class GeneticAlgorithm(Generic[IndividualType, ExtraArgType]):
 
     def run(self):
         for generation in range(self.max_generations):
-            for i, (grammar, fitness) in enumerate(self.population):
-                self.logger.info(f"Individual {i} : Fitness = {fitness}")
+            for i, individual in enumerate(self.population):
+                self.logger.info(f"Individual {i} : Fitness = {individual[1]}")
 
             best_individual = min(self.population, key=lambda individual: individual[1])
             self.fitness_history.append(best_individual[1])

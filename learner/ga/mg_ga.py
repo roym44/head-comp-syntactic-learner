@@ -6,7 +6,7 @@ from learner.experiment.MinimalistGrammarAnnealer import MinimalistGrammarAnneal
 from learner.ga.ga import GenomeType
 
 CROSSOVER_RATE = 0
-MUTATION_RATE = 0.9
+MUTATION_RATE = 0.8
 
 """
 Note: this object is wrapping an annealer, while in fact it is used in the GA for multiple MGs (population).
@@ -14,45 +14,57 @@ This can cause some weird behaviour, I tried an alternative implementation of a 
 but not in the current version if the project.
     - I saw that the fitness is not well balanced in the population, individual 0 had the best fitness value,
     while the rest had a value with a difference of more that ~500 that didn't go down
+    - Also, MGA's random_neighbour() function, added 10 times delete() operation when lexicon size > 70.
+    I saw this trend where the lexicon size reached 70, but the fitness was far from 3912 (5.1.1 target) of course,
+    but then convergence was really held back, contrary to what I am used to witness in the current implmentation.
+    I am still not sure why a population of MGGAs instead of MGs would cause that convergence to stop.
 That is why we can't save a field of 'fitness' for example, because this class is not linked directly
 to a specific MG, but the annealing process of several of them.
 """
 class MGGA(object):
-    def __init__(self, mg_annealer: MinimalistGrammarAnnealer):
+    def __init__(self, logger, mg_annealer: MinimalistGrammarAnnealer):
+        self.logger = logger
         self.mga = mg_annealer
 
     def generate_individual_grammar(self) -> GenomeType:
         # TODO: currently always returns the same initial hypothesis (consider random generation)
         genotype = self.mga.get_initial_hypothesis()
+        # only in the beginning here it's okay to calculate the energy
         fitness = self.evaluate_fitness_grammar(genotype, None)
         return genotype, fitness
 
-    def evaluate_fitness_grammar(self, genotype: MinimalistGrammar, target: Optional[MinimalistGrammar]) -> float:
+    def evaluate_fitness_grammar(self, genotype: MinimalistGrammar, target: Optional) -> float:
         try:
             fitness = self.mga.energy(genotype)
             self.mga.initial_input_parsing_dict = self.mga.new_parsing_dict
         except Exception as e:
-            print(f"evaluate_fitness_grammar(): energy error {e}")
+            self.logger.error(f"evaluate_fitness_grammar(): energy error = {e}")
             fitness = float('inf')  # TODO: a different handling of invalid hypotheses?
         return fitness
 
-    def mutate_grammar(self, genotype: MinimalistGrammar, target: Optional[MinimalistGrammar],
+    def mutate_grammar(self, genotype: MinimalistGrammar, previous_fitness: Optional,
                        mutation_rate=MUTATION_RATE) -> GenomeType:
+        self.logger.info(f"mutate_grammar(): entered with genotype = {genotype}")
         # don't perform mutation if the probability is too low (p < 1 - mutation_rate)
         if random.random() > mutation_rate:
-            return genotype, self.evaluate_fitness_grammar(genotype, target)
+            self.logger.info("mutate_grammar(): no mutation")
+            # TODO: before, I called evaluate_fitness_grammar() here and it caused an exception (cannot parse)!
+            return genotype, previous_fitness
 
         new_hypothesis, new_energy = self.mga.random_neighbour(genotype)
         # hypothesis is invalid, in which case we return the original genotype
         if new_hypothesis is None:
-            return genotype, self.evaluate_fitness_grammar(genotype, target)
+            self.logger.info("mutate_grammar(): new_hypothesis from random neighbour is None")
+            return genotype, previous_fitness
 
         self.mga.initial_input_parsing_dict = self.mga.new_parsing_dict
+        self.logger.info("mutate_grammar(): returning new_hypothesis, new_energy")
         return new_hypothesis, new_energy
 
     def crossover_grammar(self, parent1: MinimalistGrammar, parent2: MinimalistGrammar,
-                          target: Optional[MinimalistGrammar], crossover_rate=CROSSOVER_RATE) \
+                          target: Optional, crossover_rate=CROSSOVER_RATE) \
             -> Tuple[MinimalistGrammar, MinimalistGrammar]:
+        self.logger.info(f"crossover_grammar(): entered with parent1 = {parent1}, parent2 = {parent2}, target = {target}")
         # don't perform crossover if the probability is too low (p < 1 - crossover_rate)
         if random.random() > crossover_rate:
             return parent1, parent2
@@ -75,4 +87,8 @@ class MGGA(object):
         offspring1 = MinimalistGrammar(offspring1_lexicon)
         offspring2 = MinimalistGrammar(offspring2_lexicon)
 
+        """
+        Note! nothing promises that offspring1 and 2 can parse input! so trying to call evaluate_fitness_grammar()
+        can lead to an exception (Current hypothesis doesn't parse input!)
+        """
         return offspring1, offspring2
