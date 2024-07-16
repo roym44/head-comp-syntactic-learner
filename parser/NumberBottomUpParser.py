@@ -1,7 +1,7 @@
 import time
 from itertools import product
 
-from minimalist_grammar.MinimalistGrammar import get_grammar_from_string
+from minimalist_grammar.MinimalistGrammar import MinimalistGrammar, get_grammar_from_string
 from minimalist_grammar.MinimalistGrammarNode import MinimalistGrammarNode
 from minimalist_grammar import MinimalistGrammarTree, NumberMinimalistGrammarTree
 from minimalist_grammar.NumberMinimalistGrammarNode import NumberMinimalistGrammarNode
@@ -11,7 +11,7 @@ from parser.ParseTreePrinter import print_parse_tree
 
 class NumberBottomUpParser(object):
 
-    def __init__(self, grammar):
+    def __init__(self, grammar : MinimalistGrammar):
         self.grammar = grammar
 
     # main function for parsing, used in MinimalistGrammarAnnealer
