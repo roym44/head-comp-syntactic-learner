@@ -82,8 +82,10 @@ class MinimalistGrammarAnnealer(object):
         return MinimalistGrammar(sorted(lexicon, key=lambda x: x.size()))
 
     def random_neighbour(self, hypothesis: MinimalistGrammar):
+        self.logger.info("random_neighbour(): entered")
         neighbour = None
         retry_count = 0
+        # TODO: why fixed value of 70? shouldn't it be adaptive to the grammar and input used?
         if len(hypothesis.lexicon) > 70:
             neighbour_functions = self.neighbour_functions + [self.delete,
                                                               self.delete,
@@ -100,14 +102,15 @@ class MinimalistGrammarAnnealer(object):
             neighbour_functions = self.neighbour_functions + [self.add_and_delete, self.add_probable_and_delete]
 
         while neighbour is None and retry_count < 10:
+            self.logger.info(f"random_neighbour(): retry_count={retry_count}")
             option = random.choice(neighbour_functions)
             try:
                 neighbour, energy = option(hypothesis)
             except Exception as e:
-                self.logger.error(f"random_neighbour(): Exception {e}")
+                self.logger.error(f"random_neighbour(): while loop exception {e}")
             retry_count += 1
         if retry_count == 10:
-            self.logger.info("Couldn't find better hypothesis.")
+            self.logger.info("random_neighbour(): Couldn't find better hypothesis.")
             return None, None
         return neighbour, energy
 
@@ -156,7 +159,7 @@ class MinimalistGrammarAnnealer(object):
         try:
             energy = self.energy(new_grammar, deleted=removed)
         except Exception as e:
-            self.logger.error(f"delete_once(): Exception {e}")
+            self.logger.error(f"delete_once(): energy exception = {e}")
             return None, None
         self.logger.info("Deleting: " + str(removed))
         return new_grammar, energy
@@ -237,7 +240,7 @@ class MinimalistGrammarAnnealer(object):
         try:
             energy = self.energy(new_grammar, added=new_tree)
         except Exception as e:
-            self.logger.error(f"add_lexical_item_once(): Exception {e}")
+            self.logger.error(f"add_lexical_item_once(): energy exception = {e}")
             return None, None
         self.logger.info("Adding item: " + str(new_tree))
         return new_grammar, energy
@@ -353,7 +356,8 @@ class MinimalistGrammarAnnealer(object):
         new_grammar = MinimalistGrammar(new_lexicon)
         try:
             energy = self.energy(new_grammar)
-        except AnnealerException:
+        except Exception as e:
+            self.logger.error(f"change_language_direction_with_flip(): energy exception = {e}")
             return None, None
 
         self.logger.info("Changing language direction: %s -> %s" % (current_direction, new_direction))
@@ -391,7 +395,8 @@ class MinimalistGrammarAnnealer(object):
         new_grammar = MinimalistGrammar(new_lexicon)
         try:
             energy = self.energy(new_grammar)
-        except AnnealerException:
+        except Exception as e:
+            self.logger.error(f"change_category_direction_with_flip(): energy exception = {e}")
             return None, None
 
         self.logger.info("Changing %s direction: %s -> %s" % (category_to_flip, current_direction, new_direction))
@@ -438,7 +443,8 @@ class MinimalistGrammarAnnealer(object):
         new_grammar = MinimalistGrammar(new_lexicon)
         try:
             energy = self.energy(new_grammar, flipped_word=item_to_flip.head.substring)
-        except AnnealerException:
+        except Exception as e:
+            self.logger.error(f"change_word_direction_with_flip(): energy exception = {e}")
             return None, None
 
         self.logger.info('Changing "%s" direction: -> %s' % (item_to_flip, flipped_item))

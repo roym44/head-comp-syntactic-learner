@@ -91,7 +91,7 @@ class Experiment(object):
 
     def learn_ga(self, initial_input, learner_type, plot_path=None):
         mga = MinimalistGrammarAnnealer(logger, initial_input, self.blank_grammar, learner_type)
-        mg_ga = MGGA(mga)
+        mg_ga = MGGA(logger, mga)
         gal = GeneticAlgorithm(
             logger,
             mg_ga.evaluate_fitness_grammar,
