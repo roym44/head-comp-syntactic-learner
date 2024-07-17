@@ -4,11 +4,12 @@ from minimalist_grammar import MinimalistGrammarTree
 
 class MinimalistGrammar(object):
 
-    def __init__(self, lexicon):
+    def __init__(self, lexicon, parsing_dict=None):
         self.licensors = None
         self.bases = None
         self.substrings = None
         self.lexicon = lexicon
+        self.parsing_dict = {} if parsing_dict is None else parsing_dict
         self.get_features()
 
     def get_features(self):
@@ -36,6 +37,9 @@ class MinimalistGrammar(object):
 
     def __ne__(self, other):
         return not (self == other)
+
+    def get_sorted_lexicon(self):
+        return sorted(self.lexicon, key=cmp_to_key(compare_for_susbtrings))
 
 
 def get_grammar_from_string(grammar_string):
@@ -65,15 +69,3 @@ def compare_for_susbtrings(one, two):
             return -1
         else:
             return 0
-
-
-def sort_grammar_string(grammar_string):
-    lexicon = get_grammar_from_string(grammar_string).lexicon
-    return sorted(lexicon, key=cmp_to_key(compare_for_susbtrings))
-
-
-if __name__ == '__main__':
-    grammar_string = '''
-[[>@: IP =VP =DP]s, [>@: VP =PP =VP]s, [>@: DP =DP -O]s, [>@: IP =IP -Comp]s, [>ran: VP]s, [>walked: VP]s, [>read: VP]s, [>Elaine: DP]s, [>George: DP]s, [>Kramer: DP]s, [>Jerry: DP]s, [>saw: VP =DP]s, [>liked: VP =DP]s, [>assumes: VP =CP]s, [>knows: VP =CP]s, [>says: VP =CP]s, [>thinks: VP =CP]s, [<with: PP =DP]s, [<under: PP =DP]s, [>wrote: VP]s, [>that: CP =IP]s, [<by: PP =DP]s, [<above: PP =DP]s, [<loved: VP =DP]s, [<hated: VP =DP]s]
-'''
-    print(sort_grammar_string(grammar_string))

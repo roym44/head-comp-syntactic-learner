@@ -1,12 +1,5 @@
 import random
 
-# The grammar here should be [name: NP]s, [verb: VP =NP =NP]s
-NORMAL = "Pennypacker thinks that Newman writes#Kramer writes#Newman assumes that Vandalay writes#Newman loves Vandalay#Newman knows that Newman walks by Jerry#Newman walks#Babu runs#George loves Babu#Jerry says that Elaine walks by Kramer#Kramer thinks that Jerry thinks that Vandalay writes#Newman runs with Newman#Pennypacker walks#Vandalay thinks that Elaine writes with Vandalay with Elaine#Babu reads above Jerry#Pennypacker walks by Babu#George runs with Pennypacker#Pennypacker reads by Pennypacker#Pennypacker runs#Babu says that Pennypacker sees Vandalay above Kramer#Kramer hates Jerry#Vandalay writes above George#Vandalay assumes that Newman hates Pennypacker with Elaine#Pennypacker loves Elaine by Elaine#Vandalay hates Babu#Newman thinks that Jerry sees Babu#Vandalay says that Newman knows that Elaine knows that George likes Kramer above Jerry with Kramer above Vandalay#Babu sees Jerry#George loves Elaine by Newman#Kramer thinks that George loves Newman with George above Elaine#Elaine reads by Newman#Jerry assumes that Newman runs above Vandalay#Newman thinks that Jerry walks by Elaine#Jerry loves Jerry#Pennypacker sees Jerry#Jerry runs with Babu#George runs#Kramer says that George says that Elaine loves Babu with Kramer above Vandalay with Elaine#Pennypacker runs#Babu assumes that Jerry runs#Babu walks#George thinks that Newman assumes that Jerry reads by Babu#George thinks that Vandalay likes Elaine with George#Babu runs#George runs above Jerry#Elaine runs above Elaine#Elaine thinks that Kramer thinks that Pennypacker assumes that Pennypacker walks above Pennypacker by Newman with George#George walks#George walks#Jerry likes George#Newman assumes that Babu sees Elaine by George#"
-SEUSS = ""
-SIMPLE = "Vandalay runs#George loves Vandalay#Newman writes by Elaine#Kramer likes Babu with Elaine#Vandalay likes George by Newman#Kramer runs with Newman#Newman likes Vandalay above Jerry#Elaine writes#Pennypacker hates Kramer above Pennypacker#Jerry hates Vandalay#Kramer loves Babu above Babu#Elaine likes Jerry with Vandalay#Kramer likes George#Babu likes George#Vandalay hates Babu above Kramer#George walks#Elaine loves Elaine#Newman loves Newman by Babu#Kramer loves Newman by Babu#Elaine loves Elaine#Jerry likes Jerry with Pennypacker#Vandalay sees Babu by Pennypacker#Babu sees Pennypacker#Babu loves Kramer by Jerry#Kramer sees Vandalay#George loves Vandalay#Babu likes Pennypacker#Jerry loves Babu#Vandalay loves Newman by Babu#Newman hates Babu above Newman#Jerry sees George#Elaine hates Newman#Newman hates Elaine#Vandalay loves Babu#Elaine sees Elaine with Elaine#Newman sees Jerry#Jerry likes Vandalay above Jerry#Pennypacker hates Pennypacker above George#Elaine likes Newman#Newman walks with Newman#Jerry sees Pennypacker#Babu loves Jerry above Babu#George sees Elaine#Newman loves George with George#Kramer hates Elaine above Babu#Kramer hates Vandalay above Elaine#Jerry sees Jerry#Jerry loves Elaine#Pennypacker hates Newman#Kramer sees Newman#"
-JAPANESE_LIKE = "George writes#Pennypacker reads#Pennypacker writes#Kramer runs#Elaine runs#George runs#Elaine writes#Babu writes#George runs#George walks#Elaine writes#Babu reads#Jerry reads#Babu walks#Elaine runs#Jerry writes#George walks#Kramer reads#Vandalay writes#Kramer writes#Babu reads#George runs#George walks#Vandalay writes#Jerry runs#Vandalay walks#Pennypacker writes#Babu reads#Kramer reads#Elaine walks#Elaine writes#Jerry writes#Babu reads#Newman runs#Elaine runs#Babu walks#Pennypacker walks#Elaine reads#Elaine runs#George runs#Jerry runs#Elaine walks#Jerry reads#Kramer walks#Pennypacker writes#Kramer writes#Babu reads#Pennypacker reads#Babu reads#Kramer runs#"
-ENGLISH_LIKE = "Elaine reads#Jerry reads#George walks#Pennypacker runs#Jerry writes#Elaine runs#Pennypacker walks#Pennypacker walks#Jerry writes#Pennypacker runs#Kramer writes#Vandalay reads#George walks#Elaine writes#Jerry writes#Newman walks#Pennypacker writes#Kramer writes#George runs#Babu walks#Babu walks#George walks#George writes#George walks#Elaine writes#George reads#Babu reads#Newman reads#Newman walks#Elaine runs#Babu walks#Newman reads#Newman walks#Kramer runs#Elaine runs#Jerry walks#Vandalay writes#Kramer runs#Elaine walks#George walks#Babu walks#Vandalay walks#Elaine runs#Jerry writes#Elaine reads#Newman reads#Babu reads#George runs#Elaine reads#Newman runs#"
-
 proper_nouns = ["Jerry", "George", "Elaine", "Kramer"]  # , "Vandalay", "Pennypacker", "Babu", "Newman", "Yev", "Mulva"]
 # Is that how they're called?
 improper_nouns = ["boy", "girl", "dog", "cat"]  # , "man", "woman", "hedgehog", "llama", "postman", "comedian"]
@@ -41,38 +34,6 @@ def get_custom_text(size,
                                                       with_cp=with_cp,
                                                       with_coordination=with_coordination,
                                                       recursion_depth=recursion_depth)
-        text += sentence
-        text += "#"
-    return text
-
-
-def get_japanese_like_text(size):
-    text = ""
-    for i in range(size):
-        sentence = None
-        while sentence is None:
-            sentence = generate_customizable_sentence(head_initial=False,
-                                                      with_transitive=True,
-                                                      with_prepositions=False,
-                                                      with_dp=True,
-                                                      recursion_depth=0)
-
-        text += sentence
-        text += "#"
-    return text
-
-
-def get_english_like_text(size):
-    text = ""
-    for i in range(size):
-        sentence = None
-        while sentence is None:
-            sentence = generate_customizable_sentence(head_initial=True,
-                                                      with_transitive=True,
-                                                      with_prepositions=False,
-                                                      with_dp=True,
-                                                      recursion_depth=0)
-
         text += sentence
         text += "#"
     return text
@@ -227,74 +188,3 @@ def generate_customizable_sentence(with_transitive=None,
     if len(sentence.split()) > 8:
         return None
     return sentence
-
-
-# This generates sentences of the form N V N.
-def get_normal_text(size):
-    text = ""
-    for i in range(size):
-        sentence = generate_sentence()
-
-        text += sentence
-        text += "#"
-
-    return text
-
-
-def get_simple_text(size):
-    text = ""
-    for i in range(size):
-        sentence = generate_sentence(with_recursion=False)
-
-        text += sentence
-        text += "#"
-
-    return text
-
-
-def generate_sentence(with_transitive=True, with_recursion=True, with_prepositions=True):
-    sentence = ""
-    sentence += random.choice(nouns)
-    sentence += " "
-
-    verbs = intransitive
-    if with_transitive:
-        verbs += transitive
-    if with_recursion:
-        verbs += cp_transitive
-
-    verb = random.choice(verbs)
-    sentence += verb
-    if verb in transitive:
-        sentence += " "
-        sentence += random.choice(nouns)
-    if verb in cp_transitive:
-        sentence += " that " + generate_sentence()
-    if random.choice([True, False]):
-        sentence += ' %s %s' % (random.choice(prepositions), random.choice(nouns))
-    return sentence
-
-
-def write_text_to_const(name, text):
-    filename = __file__
-    if filename.endswith('c'):
-        filename = filename[:-1]
-    code = open(filename, 'r').read()
-    const_string = name + ' = "'
-    index_of_text = code.index(const_string) + len(const_string)
-    index_of_closing_quote = code.index('"', index_of_text)
-    new_code = code[:index_of_text] + text + code[index_of_closing_quote:]
-    file = open(filename, 'w')
-    file.write(new_code)
-    file.close()
-
-
-if __name__ == '__main__':
-    """
-    TODO: first impressions:
-    - all the consts at the top of the file are not used in the code, maybe we can remove them
-    - only one function here is used outside - get_custom_text, maybe we can remove the rest
-    - nouns in the code actually refer to proper_nouns list
-    """
-    text = get_english_like_text(50)
-    write_text_to_const("ENGLISH_LIKE", text)

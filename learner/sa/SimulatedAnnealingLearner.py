@@ -1,7 +1,7 @@
 import math
 import time
 
-from learner.sa.MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
+from learner.experiment.MinimalistGrammarAnnealer import MinimalistGrammarAnnealer
 from input.InputGenerator import *
 
 
@@ -29,6 +29,7 @@ class SimulatedAnnealingLearner(object):
             self.logger.info(f"Energy: {self.current_energy}")
             self.logger.info(f"Temperature: {self.temperature}")
 
+            # TODO: this note is important and should be kept also in the GA to compare them properly!
             # I made the neighbour function also calculate the energy to save time.
             new_hypothesis, new_energy = self.annealer.random_neighbour(self.hypothesis)
             if new_hypothesis is not None:
@@ -43,8 +44,8 @@ class SimulatedAnnealingLearner(object):
                 if random.random() < p and self.hypothesis != new_hypothesis:
                     self.hypothesis = new_hypothesis
                     self.current_energy = new_energy
+                    # TODO: this is really annoying and unexpected - why do I need to change it externally?
                     self.annealer.initial_input_parsing_dict = self.annealer.new_parsing_dict
-                    # TODO: seems like its misleading sometimes - could it be that the hyp doesn't change?
                     self.logger.info("Changed hypotheses.")
                 else:
                     self.logger.info("Didn't change hypotheses.")

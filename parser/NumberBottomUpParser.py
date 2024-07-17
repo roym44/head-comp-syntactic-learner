@@ -1,17 +1,20 @@
 import time
 from itertools import product
 
-from minimalist_grammar.MinimalistGrammar import get_grammar_from_string
+from minimalist_grammar.MinimalistGrammar import MinimalistGrammar, get_grammar_from_string
 from minimalist_grammar.MinimalistGrammarNode import MinimalistGrammarNode
 from minimalist_grammar import MinimalistGrammarTree, NumberMinimalistGrammarTree
 from minimalist_grammar.NumberMinimalistGrammarNode import NumberMinimalistGrammarNode
 
+from parser.ParseTreePrinter import print_parse_tree
+
 
 class NumberBottomUpParser(object):
 
-    def __init__(self, grammar):
+    def __init__(self, grammar : MinimalistGrammar):
         self.grammar = grammar
 
+    # main function for parsing, used in MinimalistGrammarAnnealer
     def parse(self, input):
         self.init_agenda(input)
         self.init_goals(input)
@@ -281,33 +284,33 @@ class NumberBottomUpParser(object):
 
     def init_goals(self, input):
         self.goals = [NumberMinimalistGrammarTree.NumberMinimalistGrammarTree([
-                                                                                  NumberMinimalistGrammarTree.NumberMinimalistGrammarNode(
-                                                                                      [(0, self.input_length)],
-                                                                                      self.categories["IP"], [], [],
-                                                                                      [])],
-                                                                              NumberMinimalistGrammarTree.TYPE_SIMPLE,
-                                                                              "right"),
-                      NumberMinimalistGrammarTree.NumberMinimalistGrammarTree([
-                                                                                  NumberMinimalistGrammarTree.NumberMinimalistGrammarNode(
-                                                                                      [(0, self.input_length)],
-                                                                                      self.categories["IP"], [], [],
-                                                                                      [])],
-                                                                              NumberMinimalistGrammarTree.TYPE_COMPLEX,
-                                                                              "right"),
-                      NumberMinimalistGrammarTree.NumberMinimalistGrammarTree([
-                                                                                  NumberMinimalistGrammarTree.NumberMinimalistGrammarNode(
-                                                                                      [(0, self.input_length)],
-                                                                                      self.categories["IP"], [], [],
-                                                                                      [])],
-                                                                              NumberMinimalistGrammarTree.TYPE_SIMPLE,
-                                                                              "left"),
-                      NumberMinimalistGrammarTree.NumberMinimalistGrammarTree([
-                                                                                  NumberMinimalistGrammarTree.NumberMinimalistGrammarNode(
-                                                                                      [(0, self.input_length)],
-                                                                                      self.categories["IP"], [], [],
-                                                                                      [])],
-                                                                              NumberMinimalistGrammarTree.TYPE_COMPLEX,
-                                                                              "left")]
+            NumberMinimalistGrammarTree.NumberMinimalistGrammarNode(
+                [(0, self.input_length)],
+                self.categories["IP"], [], [],
+                [])],
+            NumberMinimalistGrammarTree.TYPE_SIMPLE,
+            "right"),
+            NumberMinimalistGrammarTree.NumberMinimalistGrammarTree([
+                NumberMinimalistGrammarTree.NumberMinimalistGrammarNode(
+                    [(0, self.input_length)],
+                    self.categories["IP"], [], [],
+                    [])],
+                NumberMinimalistGrammarTree.TYPE_COMPLEX,
+                "right"),
+            NumberMinimalistGrammarTree.NumberMinimalistGrammarTree([
+                NumberMinimalistGrammarTree.NumberMinimalistGrammarNode(
+                    [(0, self.input_length)],
+                    self.categories["IP"], [], [],
+                    [])],
+                NumberMinimalistGrammarTree.TYPE_SIMPLE,
+                "left"),
+            NumberMinimalistGrammarTree.NumberMinimalistGrammarTree([
+                NumberMinimalistGrammarTree.NumberMinimalistGrammarNode(
+                    [(0, self.input_length)],
+                    self.categories["IP"], [], [],
+                    [])],
+                NumberMinimalistGrammarTree.TYPE_COMPLEX,
+                "left")]
 
     # This is a comaprison that ignores type, merge direction and optional licensees.
     def is_goal_item(self, item):
@@ -321,7 +324,7 @@ class NumberBottomUpParser(object):
         return is_goal
 
 
-def parse_sentence(grammar, sentence, draw_tree=False):
+def parse_sentence(grammar, sentence, draw_tree=False, folder="DerivationTrees"):
     parser = NumberBottomUpParser(grammar)
 
     print("Parsing the sentence:", sentence)
@@ -340,10 +343,11 @@ def parse_sentence(grammar, sentence, draw_tree=False):
         # print "Derivation length:", item.derivation_length
         # print "Derivation size:", item.derivation_size
         if draw_tree:
-            from ParseTreePrinter import print_parse_tree
-            print_parse_tree(sentence, item.nested_derivation, translation_func=parser.translate_to_strings)
+            print_parse_tree(sentence, item.nested_derivation, translation_func=parser.translate_to_strings,
+                             folder=folder)
 
     print("\nElapsed time:", end - start)
+    return result
 
 
 def parse_input(grammar, input):

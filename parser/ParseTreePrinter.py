@@ -43,7 +43,7 @@ def build_derivation_step(tree, step, translation_func = None):
         
     return vertex_id
 
-def print_parse_tree(sentence, derivation, save_to_file = True, translation_func = None):
+def print_parse_tree(sentence, derivation, save_to_file = True, translation_func = None, folder = None):
     tree = Graph()
     
     final_node = build_derivation_step(tree, derivation, translation_func = translation_func)
@@ -64,7 +64,14 @@ def print_parse_tree(sentence, derivation, save_to_file = True, translation_func
     if save_to_file:
         time_str = time.strftime("%Y_%m_%d__%H_%M_%S - ")
         file_name = time_str + sentence + ".png"
-        file_path = os.path.join(PICS_FOLDER, file_name)
+        if folder is not None:
+            full_path = os.path.join(PICS_FOLDER, folder)
+            if not os.path.exists(full_path):
+                os.mkdir(full_path)
+        else:
+            full_path = PICS_FOLDER
+        file_path = os.path.join(full_path, file_name)
+
         plot(tree, file_path, **visual_style)
         
 if __name__ == '__main__':
